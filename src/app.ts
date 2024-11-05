@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: true }))
 dotenv.config()
 
 //routers
-import Health from "./routes/health/healthcheck.router"
+import Health from "./routes/health/healthcheck.router.js"
 
 //health
 app.use("/", Health)
