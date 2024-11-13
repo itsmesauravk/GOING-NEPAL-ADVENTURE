@@ -1,5 +1,9 @@
 import express from "express"
-import { addTrek, getTrek } from "../controllers/trekking/index.js"
+import {
+  addTrek,
+  getSingleTrek,
+  getTrek,
+} from "../controllers/trekking/index.js"
 import uploader from "../utils/multer.js"
 
 // Add these type definitions
@@ -40,5 +44,16 @@ router.get("/treks", async (req, res, next) => {
     next(error)
   }
 })
+
+// get single trek
+router.get("/trek/:id", async (req, res, next) => {
+  try {
+    await getSingleTrek(req as MulterRequest, res)
+  } catch (error) {
+    next(error)
+  }
+})
+
+// Export the router
 
 export default router
