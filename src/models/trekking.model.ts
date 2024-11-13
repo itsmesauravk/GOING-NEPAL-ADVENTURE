@@ -9,6 +9,8 @@ const itinerarySchema = new mongoose.Schema(
     day: { type: Number, required: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
+    accomodation: { type: String, required: true },
+    meals: { type: String, required: true },
     links: [
       {
         text: { type: String },
@@ -65,6 +67,7 @@ const trekHighlightSchema = new mongoose.Schema(
 const trekkingSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
+    slug: { type: String, unique: true, default: "" },
     price: { type: Number, required: true },
     thumbnail: { type: String }, // URL or path to the image
     country: {
@@ -87,7 +90,7 @@ const trekkingSchema = new mongoose.Schema(
     },
     startingPoint: { type: String, required: true },
     endingPoint: { type: String, required: true },
-    accommodation: { type: [String], required: true }, // Array of strings for types of accommodation
+    accommodation: { type: [String], required: true },
     meal: { type: String, enum: ["Inclusive", "Exclusive"], required: true },
     bestSeason: { type: [String], required: true },
     overview: { type: String, required: true },

@@ -20,7 +20,8 @@
     "http-status-codes": "^2.3.0",
     "mongoose": "^8.8.0",
     "multer": "^1.4.5-lts.1",
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7",
+    "slug": "^10.0.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -28,6 +29,7 @@
     "@types/mongoose": "^5.11.97",
     "@types/multer": "^1.4.12",
     "@types/node": "^22.7.4",
+    "@types/slug": "^5.0.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2"
   }

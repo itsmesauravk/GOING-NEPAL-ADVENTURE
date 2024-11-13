@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import Trekking from "../../../models/trekking.model.js"
 import { uploadFile } from "../../../utils/cloudinary.js"
 import { StatusCodes } from "http-status-codes"
+import slug from "slug"
 
 // Custom MulterRequest to handle multiple file types
 interface MulterRequest extends Request {
@@ -182,6 +183,13 @@ const addTrek = async (
 
     // Save trek to database
     const savedTrek = await newTrek.save()
+
+    const tempSlug = slug(name)
+    const trekSlug = `${tempSlug}-${savedTrek._id}`
+
+    // Update trek with slug
+    savedTrek.slug = trekSlug
+    await savedTrek.save()
 
     return res.status(StatusCodes.CREATED).json({
       success: true,
