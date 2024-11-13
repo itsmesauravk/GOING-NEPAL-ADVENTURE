@@ -3,6 +3,7 @@ import {
   addTrek,
   getSingleTrek,
   getTrek,
+  deleteTrek,
 } from "../controllers/trekking/index.js"
 import uploader from "../utils/multer.js"
 
@@ -54,6 +55,14 @@ router.get("/trek/:id", async (req, res, next) => {
   }
 })
 
-// Export the router
+// delete trek
+router.delete("/delete-trek/:id", async (req, res, next) => {
+  try {
+    await deleteTrek(req as MulterRequest, res)
+  } catch (error) {
+    next(error)
+  }
+})
 
+// Export the router
 export default router
