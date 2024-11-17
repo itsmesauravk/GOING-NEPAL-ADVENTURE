@@ -4,6 +4,7 @@ import {
   getSingleTrek,
   getTrek,
   deleteTrek,
+  getTrekBySlug,
 } from "../controllers/trekking/index.js"
 import uploader from "../utils/multer.js"
 
@@ -50,6 +51,15 @@ router.get("/treks", async (req, res, next) => {
 router.get("/trek/:id", async (req, res, next) => {
   try {
     await getSingleTrek(req as MulterRequest, res)
+  } catch (error) {
+    next(error)
+  }
+})
+
+//get trek by slug
+router.get("/trek/slug/:slug", async (req, res, next) => {
+  try {
+    await getTrekBySlug(req as MulterRequest, res)
   } catch (error) {
     next(error)
   }
