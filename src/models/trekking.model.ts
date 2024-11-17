@@ -8,8 +8,8 @@ const itinerarySchema = new mongoose.Schema(
   {
     day: { type: Number, required: true },
     title: { type: String, required: true },
-    description: { type: String, required: true },
-    accomodation: { type: String, required: true },
+    details: { type: String, required: true },
+    accommodations: { type: String, required: true },
     meals: { type: String, required: true },
     links: [
       {
@@ -71,8 +71,8 @@ const trekkingSchema = new mongoose.Schema(
     price: { type: Number, required: true },
     thumbnail: { type: String }, // URL or path to the image
     country: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Country",
+      type: String,
+      required: true,
     },
     days: {
       min: { type: Number, required: true },

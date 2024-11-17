@@ -34,8 +34,24 @@ const uploadFile = async (file: string, folder: string) => {
   }
 }
 
-// delete file
+//upload video
+const uploadVideo = async (file: string, folder: string) => {
+  try {
+    const uploadResult = await cloudinary.uploader.upload(file, {
+      folder: `/Going Nepal Adventure/${folder}`,
+      resource_type: "video",
+    })
+    if (!uploadResult) {
+      throw new Error("Error uploading file")
+    }
+    // console.log(uploadResult);
+    return uploadResult
+  } catch (error) {
+    console.log("Error on cloudinary :", error)
+  }
+}
 
+// delete file
 const deleteFile = async (public_id: string) => {
   // console.log(public_id);
   try {
@@ -50,4 +66,4 @@ const deleteFile = async (public_id: string) => {
   }
 }
 
-export { uploadFile, deleteFile }
+export { uploadFile, deleteFile, uploadVideo }

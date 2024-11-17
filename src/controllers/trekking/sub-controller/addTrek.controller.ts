@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import Trekking from "../../../models/trekking.model.js"
-import { uploadFile } from "../../../utils/cloudinary.js"
+import { uploadFile, uploadVideo } from "../../../utils/cloudinary.js"
 import { StatusCodes } from "http-status-codes"
 import slug from "slug"
 
@@ -54,7 +54,7 @@ const addTrek = async (
     if (
       !name ||
       !price ||
-      //   !country ||
+      !country ||
       !minDays ||
       !maxDays ||
       !location ||
@@ -121,12 +121,14 @@ const addTrek = async (
         thumbnail[0].path,
         "trekking/thumbnail"
       )
+
       if (!uploadedThumbnail) {
         return res.status(StatusCodes.BAD_REQUEST).json({
           success: false,
           message: "Error uploading thumbnail",
         })
       }
+      uploadedThumbnail = uploadedThumbnail.secure_url
     }
 
     // Upload images
@@ -143,7 +145,7 @@ const addTrek = async (
     // Upload video
     let uploadedVideo: string | undefined
     if (video && video.length > 0) {
-      const videoUpload = await uploadFile(video[0].path, "trekking/videos")
+      const videoUpload = await uploadVideo(video[0].path, "trekking/videos")
       if (videoUpload) {
         uploadedVideo = videoUpload.secure_url
       }
@@ -160,22 +162,22 @@ const addTrek = async (
       groupSize: { min: groupSizeMin, max: groupSizeMax },
       startingPoint,
       endingPoint,
-      accommodation,
+      accommodation: JSON.parse(accommodation),
       meal,
-      bestSeason,
+      bestSeason: JSON.parse(bestSeason),
       overview,
-      thumbnail: uploadedThumbnail?.secure_url,
-      trekHighlights: trekHighlights || [],
-      itinerary: itinerary || [],
-      servicesCostIncludes: servicesCostIncludes || [],
-      servicesCostExcludes: servicesCostExcludes || [],
-      packingList: packingList || {
+      thumbnail: uploadedThumbnail,
+      trekHighlights: JSON.parse(trekHighlights) || [],
+      itinerary: JSON.parse(itinerary) || [],
+      servicesCostIncludes: JSON.parse(servicesCostIncludes) || [],
+      servicesCostExcludes: JSON.parse(servicesCostExcludes) || [],
+      packingList: JSON.parse(packingList) || {
         general: [],
         clothes: [],
         firstAid: [],
         otherEssentials: [],
       },
-      faq: faq || [],
+      faq: JSON.parse(faq) || [],
       images: uploadedImages,
       video: uploadedVideo,
       note,
