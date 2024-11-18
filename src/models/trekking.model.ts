@@ -9,8 +9,8 @@ const itinerarySchema = new mongoose.Schema(
     day: { type: Number, required: true },
     title: { type: String, required: true },
     details: { type: String, required: true },
-    accommodations: { type: String, required: true },
-    meals: { type: String, required: true },
+    accommodations: { type: String },
+    meals: { type: String },
     links: [
       {
         text: { type: String },

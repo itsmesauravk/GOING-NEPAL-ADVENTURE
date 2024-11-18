@@ -22,6 +22,11 @@ const getTrek = async (req: Request, res: Response): Promise<Response> => {
 
     apiData = apiData.skip(skip).limit(limit)
 
+    const totalTrekCount = await Trekking.countDocuments(queryObject)
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalTrekCount / limit)
+
     const trek = await apiData
 
     if (!trek) {
@@ -35,6 +40,7 @@ const getTrek = async (req: Request, res: Response): Promise<Response> => {
       success: true,
       message: "Trek found",
       data: trek,
+      totalPages,
       nbhits: trek.length,
     })
   } catch (error) {
