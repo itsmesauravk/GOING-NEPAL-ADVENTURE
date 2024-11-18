@@ -1,3 +1,3 @@
 export interface QueryObjectType {
-  location?: String
+  name?: String
 }

@@ -6,18 +6,18 @@ import { QueryObjectType } from "../../../utils/types.js"
 // Getting all treks with all the filtration, sorting and pagination
 const getTrek = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { location } = req.query
+    const { searchText } = req.query
 
     const queryObject: QueryObjectType = {}
 
-    if (location) {
-      queryObject.location = location as string
+    if (searchText) {
+      queryObject.name = { $regex: searchText, $options: "i" } as any
     }
 
     let apiData = Trekking.find(queryObject)
 
     let page = Number(req.query.page) || 1
-    let limit = Number(req.query.limit) || 5
+    let limit = Number(req.query.limit) || 10
     let skip = (page - 1) * limit
 
     apiData = apiData.skip(skip).limit(limit)
