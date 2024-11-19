@@ -1,4 +1,6 @@
 export interface QueryObjectType {
   name?: String
-  createdAt?: string
+  updatedAt?: string
+  difficulty?: string
+  sort?: string
 }
