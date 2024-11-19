@@ -6,7 +6,7 @@ import { QueryObjectType } from "../../../utils/types.js"
 // Getting all treks with all the filtration, sorting and pagination
 const getTrek = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { search } = req.query
+    const { search, createdAt } = req.query
 
     const queryObject: QueryObjectType = {}
 
@@ -14,7 +14,11 @@ const getTrek = async (req: Request, res: Response): Promise<Response> => {
       queryObject.name = { $regex: search, $options: "i" } as any
     }
 
-    let apiData = Trekking.find(queryObject)
+    if (createdAt) {
+      queryObject.createdAt = createdAt as string
+    }
+
+    let apiData = Trekking.find(queryObject).sort("-updatedAt")
 
     let page = Number(req.query.page) || 1
     let limit = Number(req.query.limit) || 10

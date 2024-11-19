@@ -20,6 +20,11 @@ const getSingleTrek = async (
       })
     }
 
+    if (trek) {
+      trek.viewsCount += 1
+      await trek.save()
+    }
+
     return res.status(StatusCodes.OK).json({
       success: true,
       message: "Trek found",
