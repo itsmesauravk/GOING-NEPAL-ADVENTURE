@@ -1,5 +1,4 @@
 import mongoose from "mongoose"
-import { start } from "repl"
 
 // sub schemas
 
@@ -23,19 +22,6 @@ const itinerarySchema = new mongoose.Schema(
   }
 )
 
-// Packing list sub-schema
-const packingListSchema = new mongoose.Schema(
-  {
-    general: { type: [String], default: [] },
-    clothes: { type: [String], default: [] },
-    firstAid: { type: [String], default: [] },
-    otherEssentials: { type: [String], default: [] },
-  },
-  {
-    _id: false,
-  }
-)
-
 // FAQ sub-schema
 const faqSchema = new mongoose.Schema(
   {
@@ -47,8 +33,8 @@ const faqSchema = new mongoose.Schema(
   }
 )
 
-// trek highlights sub-schema
-const trekHighlightSchema = new mongoose.Schema(
+//  highlights sub-schema
+const highlightSchema = new mongoose.Schema(
   {
     content: { type: String, required: true },
     links: [
@@ -63,42 +49,47 @@ const trekHighlightSchema = new mongoose.Schema(
   }
 )
 
-// Main trekking schema
-const trekkingSchema = new mongoose.Schema(
+// Main schema
+const wellnessSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     slug: { type: String, unique: true, default: "" },
     price: { type: Number, required: true },
-    thumbnail: { type: String }, // URL or path to the image
+    thumbnail: { type: String },
     country: {
       type: String,
       required: true,
     },
+    language: { type: String, required: true },
+    maxAltitude: { type: String, required: true },
+    suitableAge: { type: String, required: true },
     days: {
       min: { type: Number, required: true },
       max: { type: Number, required: true },
     },
     location: { type: String, required: true },
-    difficulty: {
+    clothesType: {
       type: String,
-      enum: ["Easy", "Moderate", "Difficult"],
       required: true,
     },
     groupSize: {
       min: { type: Number, required: true },
       max: { type: Number, required: true },
     },
+    arrivalLocation: { type: String, required: true },
+    departureLocation: { type: String, required: true },
     startingPoint: { type: String, required: true },
     endingPoint: { type: String, required: true },
     accommodation: { type: [String], required: true },
+    thingsToKnow: { type: [String], required: true },
     meal: { type: String, enum: ["Inclusive", "Exclusive"], required: true },
     bestSeason: { type: [String], required: true },
     overview: { type: String, required: true },
-    trekHighlights: [trekHighlightSchema],
+    highlights: [highlightSchema],
     itinerary: [itinerarySchema], // Array of itinerary objects
     servicesCostIncludes: { type: [String], default: [] },
     servicesCostExcludes: { type: [String], default: [] },
-    packingList: packingListSchema, // Embedded packing list schema
+
     faq: [faqSchema], // Array of FAQ objects
     images: { type: [String], default: [] }, // Array of image URLs or paths
     video: { type: String },
@@ -116,6 +107,6 @@ const trekkingSchema = new mongoose.Schema(
   }
 )
 
-const Trekking = mongoose.model("Trekking", trekkingSchema)
+const Wellness = mongoose.model("Wellness", wellnessSchema)
 
-export default Trekking
+export default Wellness

@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import Trekking from "../../../models/trekking.model.js"
+import Tour from "../../../models/tour.model.js"
 import { uploadFile, uploadVideo } from "../../../utils/cloudinary.js"
 import { StatusCodes } from "http-status-codes"
 import slug from "slug"
@@ -13,7 +13,7 @@ interface MulterRequest extends Request {
   }
 }
 
-const addTrek = async (
+const addTour = async (
   req: MulterRequest,
   res: Response
 ): Promise<Response> => {
@@ -23,23 +23,29 @@ const addTrek = async (
       name,
       price,
       country,
+      tripType,
+      tourLanguage,
+      maxAltitude,
+      suitableAge,
+      arrivalLocation,
+      departureLocation,
       minDays,
       maxDays,
       location,
-      difficulty,
       groupSizeMin,
       groupSizeMax,
       startingPoint,
       endingPoint,
       accommodation,
+      thingsToKnow,
       meal,
       bestSeason,
       overview,
-      trekHighlights,
+      highlights,
       itinerary,
       servicesCostIncludes,
       servicesCostExcludes,
-      packingList,
+
       faq,
       note,
     } = req.body
@@ -58,12 +64,18 @@ const addTrek = async (
       !minDays ||
       !maxDays ||
       !location ||
-      !difficulty ||
+      !tripType ||
+      !tourLanguage ||
+      !maxAltitude ||
+      !suitableAge ||
+      !arrivalLocation ||
+      !departureLocation ||
       !groupSizeMin ||
       !groupSizeMax ||
       !startingPoint ||
       !endingPoint ||
       !accommodation ||
+      !thingsToKnow ||
       !meal ||
       !bestSeason ||
       !overview
@@ -71,14 +83,6 @@ const addTrek = async (
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
         message: "Please provide all required fields.",
-      })
-    }
-
-    // Validate difficulty enum
-    if (!["Easy", "Moderate", "Difficult"].includes(difficulty)) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        success: false,
-        message: "Invalid difficulty level",
       })
     }
 
@@ -90,17 +94,9 @@ const addTrek = async (
       })
     }
 
-    // // Validate itinerary days match the total days
-    // if (itinerary.length < 0) {
-    //   return res.status(StatusCodes.BAD_REQUEST).json({
-    //     success: false,
-    //     message: "Itinerary days should match the total trek days",
-    //   })
-    // }
-
     // Validate links in trek highlights
-    if (trekHighlights) {
-      for (const highlight of trekHighlights) {
+    if (highlights) {
+      for (const highlight of highlights) {
         if (highlight.links) {
           for (const link of highlight.links) {
             if (!link.text || !link.url) {
@@ -117,10 +113,7 @@ const addTrek = async (
     // Upload thumbnail
     let uploadedThumbnail
     if (thumbnail) {
-      uploadedThumbnail = await uploadFile(
-        thumbnail[0].path,
-        "trekking/thumbnail"
-      )
+      uploadedThumbnail = await uploadFile(thumbnail[0].path, "tour/thumbnail")
 
       if (!uploadedThumbnail) {
         return res.status(StatusCodes.BAD_REQUEST).json({
@@ -135,7 +128,7 @@ const addTrek = async (
     const uploadedImages: string[] = []
     if (images && images.length > 0) {
       for (const image of images) {
-        const uploadedImage = await uploadFile(image.path, "trekking/images")
+        const uploadedImage = await uploadFile(image.path, "tour/images")
         if (uploadedImage) {
           uploadedImages.push(uploadedImage.secure_url)
         }
@@ -145,61 +138,59 @@ const addTrek = async (
     // Upload video
     let uploadedVideo: string | undefined
     if (video && video.length > 0) {
-      const videoUpload = await uploadVideo(video[0].path, "trekking/videos")
+      const videoUpload = await uploadVideo(video[0].path, "tour/videos")
       if (videoUpload) {
         uploadedVideo = videoUpload.secure_url
       }
     }
 
+    //slug
+    const nameSlug = slug(name)
+
     // Create new trek
-    const newTrek = new Trekking({
+    const newTrek = new Tour({
       name,
+      slug: nameSlug,
       price,
       country,
+      tripType,
+      language: tourLanguage,
+      maxAltitude,
+      suitableAge,
+      arrivalLocation,
+      departureLocation,
+
       days: { min: minDays, max: maxDays },
       location,
-      difficulty,
       groupSize: { min: groupSizeMin, max: groupSizeMax },
       startingPoint,
       endingPoint,
       accommodation: JSON.parse(accommodation),
+      thingsToKnow: JSON.parse(thingsToKnow),
       meal,
       bestSeason: JSON.parse(bestSeason),
       overview,
       thumbnail: uploadedThumbnail,
-      trekHighlights: JSON.parse(trekHighlights) || [],
+      highlights: JSON.parse(highlights) || [],
       itinerary: JSON.parse(itinerary) || [],
       servicesCostIncludes: JSON.parse(servicesCostIncludes) || [],
       servicesCostExcludes: JSON.parse(servicesCostExcludes) || [],
-      packingList: JSON.parse(packingList) || {
-        general: [],
-        clothes: [],
-        firstAid: [],
-        otherEssentials: [],
-      },
       faq: JSON.parse(faq) || [],
       images: uploadedImages,
       video: uploadedVideo,
       note,
     })
 
-    // Save trek to database
-    const savedTrek = await newTrek.save()
-
-    const tempSlug = slug(name)
-    const trekSlug = `${tempSlug}-${savedTrek._id}`
-
-    // Update trek with slug
-    savedTrek.slug = trekSlug
-    await savedTrek.save()
+    // Save tour to database
+    const savedTour = await newTrek.save()
 
     return res.status(StatusCodes.CREATED).json({
       success: true,
-      message: "Trek added successfully",
-      data: savedTrek,
+      message: "Tour added successfully",
+      data: savedTour,
     })
   } catch (error: any) {
-    console.error("Error in addTrek:", error)
+    console.error("Error in addTour:", error)
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: "Internal server error",
@@ -208,4 +199,4 @@ const addTrek = async (
   }
 }
 
-export default addTrek
+export default addTour

@@ -5,7 +5,7 @@ import {
   getTrek,
   deleteTrek,
   getTrekBySlug,
-} from "../controllers/trekking/index.js"
+} from "../controllers/trekkings/index.js"
 import uploader from "../utils/multer.js"
 
 // Add these type definitions
