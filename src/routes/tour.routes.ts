@@ -1,5 +1,9 @@
 import express from "express"
-import { addTour, getAllTours } from "../controllers/tours/index.js"
+import {
+  addTour,
+  getAllTours,
+  getTourBySlug,
+} from "../controllers/tours/index.js"
 import uploader from "../utils/multer.js"
 
 // Add these type definitions
@@ -50,14 +54,14 @@ router.get("/tours", async (req, res, next) => {
 //   }
 // })
 
-// //get trek by slug
-// router.get("/tour/slug/:slug", async (req, res, next) => {
-//   try {
-//     await getTrekBySlug(req as MulterRequest, res)
-//   } catch (error) {
-//     next(error)
-//   }
-// })
+//get trek by slug
+router.get("/get-tour/:slug", async (req, res, next) => {
+  try {
+    await getTourBySlug(req as MulterRequest, res)
+  } catch (error) {
+    next(error)
+  }
+})
 
 // // delete trek
 // router.delete("/delete-tour/:id", async (req, res, next) => {

@@ -1,5 +1,9 @@
 import express from "express"
-import { addWellness, getAllWellness } from "../controllers/wellness/index.js"
+import {
+  addWellness,
+  getAllWellness,
+  getWellnessBySLug,
+} from "../controllers/wellness/index.js"
 import uploader from "../utils/multer.js"
 
 // Add these type definitions
@@ -50,14 +54,14 @@ router.get("/all-wellness", async (req, res, next) => {
 //   }
 // })
 
-// //get trek by slug
-// router.get("/tour/slug/:slug", async (req, res, next) => {
-//   try {
-//     await getTrekBySlug(req as MulterRequest, res)
-//   } catch (error) {
-//     next(error)
-//   }
-// })
+//get wellness by slug
+router.get("/get-wellness/:slug", async (req, res, next) => {
+  try {
+    await getWellnessBySLug(req as MulterRequest, res)
+  } catch (error) {
+    next(error)
+  }
+})
 
 // // delete trek
 // router.delete("/delete-tour/:id", async (req, res, next) => {

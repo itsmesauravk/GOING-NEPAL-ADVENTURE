@@ -57,7 +57,7 @@ router.get("/trek/:id", async (req, res, next) => {
 })
 
 //get trek by slug
-router.get("/trek/slug/:slug", async (req, res, next) => {
+router.get("/get-trek/:slug", async (req, res, next) => {
   try {
     await getTrekBySlug(req as MulterRequest, res)
   } catch (error) {
