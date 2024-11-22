@@ -6,9 +6,13 @@ import { QueryObjectType } from "../../../utils/types.js"
 // Getting all tours with all the filtration, sorting and pagination
 const getAllTours = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { search, updatedAt, sort } = req.query
+    const { country, search, updatedAt, sort } = req.query
 
     const queryObject: QueryObjectType = {}
+
+    if (country) {
+      queryObject.country = country as string
+    }
 
     if (search) {
       queryObject.name = { $regex: search, $options: "i" } as any
