@@ -3,6 +3,7 @@ import {
   addWellness,
   getAllWellness,
   getWellnessBySLug,
+  editWellnessVisibility,
 } from "../controllers/wellness/index.js"
 import uploader from "../utils/multer.js"
 
@@ -71,6 +72,18 @@ router.get("/get-wellness/:slug", async (req, res, next) => {
 //     next(error)
 //   }
 // })
+
+// Update wellness visibility
+router.patch(
+  "/edit-wellness-visibility/:wellnessId",
+  async (req, res, next) => {
+    try {
+      await editWellnessVisibility(req as MulterRequest, res)
+    } catch (error) {
+      next(error)
+    }
+  }
+)
 
 // Export the router
 export default router

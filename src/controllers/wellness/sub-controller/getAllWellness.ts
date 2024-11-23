@@ -9,7 +9,7 @@ const getAllWellness = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const { country, search, updatedAt, sort } = req.query
+    const { country, search, updatedAt, sort, visibility } = req.query
 
     const queryObject: QueryObjectType = {}
 
@@ -19,6 +19,9 @@ const getAllWellness = async (
 
     if (search) {
       queryObject.name = { $regex: search, $options: "i" } as any
+    }
+    if (visibility && typeof visibility === "string") {
+      queryObject[visibility] = "true" as string
     }
 
     let apiData = Wellness.find(queryObject)

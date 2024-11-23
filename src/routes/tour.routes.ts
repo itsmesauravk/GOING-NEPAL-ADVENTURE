@@ -3,6 +3,7 @@ import {
   addTour,
   getAllTours,
   getTourBySlug,
+  editTourVisibility,
 } from "../controllers/tours/index.js"
 import uploader from "../utils/multer.js"
 
@@ -71,6 +72,15 @@ router.get("/get-tour/:slug", async (req, res, next) => {
 //     next(error)
 //   }
 // })
+
+// Update trek visibility
+router.patch("/edit-tour-visibility/:tourId", async (req, res, next) => {
+  try {
+    await editTourVisibility(req as MulterRequest, res)
+  } catch (error) {
+    next(error)
+  }
+})
 
 // Export the router
 export default router
