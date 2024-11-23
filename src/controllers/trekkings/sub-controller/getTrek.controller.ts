@@ -6,7 +6,8 @@ import { QueryObjectType } from "../../../utils/types.js"
 // Getting all treks with all the filtration, sorting and pagination
 const getTrek = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { country, search, updatedAt, difficulty, sort } = req.query
+    const { country, search, updatedAt, difficulty, sort, visibility } =
+      req.query
 
     const queryObject: QueryObjectType = {}
 
@@ -22,7 +23,9 @@ const getTrek = async (req: Request, res: Response): Promise<Response> => {
       queryObject.difficulty = difficulty as string
     }
 
-    console.log(queryObject)
+    if (visibility && typeof visibility === "string") {
+      queryObject[visibility] = "true" as string
+    }
 
     let apiData = Trekking.find(queryObject)
 

@@ -3,5 +3,13 @@ import getTrek from "./sub-controller/getTrek.controller.js"
 import getSingleTrek from "./sub-controller/getSingleTrek.controller.js"
 import deleteTrek from "./sub-controller/deleteTrek.controller.js"
 import getTrekBySlug from "./sub-controller/getTrekBySlug.js"
+import editTrekVisibility from "./sub-controller/editTrekVisiblity.js"
 
-export { addTrek, getTrek, getSingleTrek, getTrekBySlug, deleteTrek }
+export {
+  addTrek,
+  getTrek,
+  getSingleTrek,
+  getTrekBySlug,
+  deleteTrek,
+  editTrekVisibility,
+}
