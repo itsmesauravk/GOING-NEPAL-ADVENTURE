@@ -18,6 +18,8 @@ import trekkingRouter from "./routes/trekking.routes.js"
 import tourRouter from "./routes/tour.routes.js"
 //wellness
 import wellnessRouter from "./routes/wellness.routes.js"
+//blogs
+import blogRouter from "./routes/blog.routes.js"
 
 //health
 app.use("/", Health)
@@ -27,6 +29,8 @@ app.use("/api/v1/trekking", trekkingRouter)
 app.use("/api/v1/tour", tourRouter)
 //wellness
 app.use("/api/v1/wellness", wellnessRouter)
+//blogs
+app.use("/api/v1/blogs", blogRouter)
 
 // default route
 app.get("/", (req, res) => {
