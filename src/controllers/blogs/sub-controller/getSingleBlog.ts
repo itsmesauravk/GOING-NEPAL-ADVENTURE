@@ -16,6 +16,10 @@ export const getSingleBlog = async (req: Request, res: Response) => {
         .status(StatusCodes.NOT_FOUND)
         .json({ success: false, message: "Blog Not Found" })
 
+    blog.blogViews = blog.blogViews + 1
+
+    await blog.save()
+
     return res
       .status(StatusCodes.ACCEPTED)
       .json({ success: true, message: "Blog Found Successfully", data: blog })
