@@ -5,6 +5,7 @@ import uploader from "../utils/multer.js"
 
 import {
   addBlog,
+  deleteBlog,
   getAllBlogs,
   getSingleBlog,
 } from "../controllers/blogs/index.js"
@@ -33,6 +34,14 @@ router.get("/all-blogs", async (req, res, next) => {
 router.get("/get-blog-by-slug/:slug", async (req, res, next) => {
   try {
     await getSingleBlog(req as MulterRequest, res)
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.delete("/delete-blog/:id", async (req, res, next) => {
+  try {
+    await deleteBlog(req as MulterRequest, res)
   } catch (error) {
     next(error)
   }

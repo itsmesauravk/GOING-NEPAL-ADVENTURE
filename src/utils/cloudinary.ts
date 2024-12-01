@@ -24,6 +24,7 @@ const uploadFile = async (file: string, folder: string) => {
     const uploadResult = await cloudinary.uploader.upload(file, {
       folder: `/Going Nepal Adventure/${folder}`,
     })
+    console.log(uploadResult)
     if (!uploadResult) {
       throw new Error("Error uploading file")
     }
@@ -50,6 +51,36 @@ const uploadVideo = async (file: string, folder: string) => {
     console.log("Error on cloudinary :", error)
   }
 }
+const deleteImage = async (secureUrl: string) => {
+  try {
+    if (!secureUrl) {
+      throw new Error("secureUrl is required")
+    }
+
+    // Extract the public_id
+    const publicId = secureUrl
+      .split("/")
+      .slice(7) // Remove initial URL components
+      .join("/") // Join remaining components
+      .replace(/\.[^/.]+$/, "") // Remove the file extension
+
+    console.log(`Extracted public_id: ${publicId}`)
+
+    const updatedString = publicId.replace(/%20/g, " ")
+
+    // Delete the image using the public_id
+    const result = await cloudinary.uploader.destroy(updatedString)
+
+    if (result.result !== "ok") {
+      throw new Error("Error deleting file")
+    }
+
+    // return result
+  } catch (error) {
+    console.error("Error in deleteImage function:", error)
+    throw error
+  }
+}
 
 // delete file
 const deleteFile = async (public_id: string) => {
@@ -66,4 +97,4 @@ const deleteFile = async (public_id: string) => {
   }
 }
 
-export { uploadFile, deleteFile, uploadVideo }
+export { uploadFile, deleteFile, uploadVideo, deleteImage }
