@@ -5,7 +5,8 @@ export interface QueryObjectType {
   difficulty?: string
   sort?: string
   visibility?: "isFeatured" | "isPopular" | "isNewItem" | "isRecommended"
-  [key: string]: string | undefined
+  [key: string]: string | undefined | { $ne: string } | object
+  _id?: { $ne: string }
 }
 
 export interface BlogQueryObjectType {
