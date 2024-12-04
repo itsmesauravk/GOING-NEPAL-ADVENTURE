@@ -10,6 +10,7 @@ interface MulterRequest extends Request {
     thumbnail?: Express.Multer.File[]
     images?: Express.Multer.File[]
     video?: Express.Multer.File[]
+    trekPdf?: Express.Multer.File[]
   }
 }
 
@@ -48,6 +49,7 @@ const addTrek = async (
     const thumbnail = req.files?.thumbnail
     const images = req.files?.images
     const video = req.files?.video
+    const trekPdf = req.files?.trekPdf
 
     // Validate required fields
     // console.log(req.body)
@@ -134,6 +136,15 @@ const addTrek = async (
       }
     }
 
+    // upload trek pdf
+    let uploadedTrekPdf: string | undefined
+    if (trekPdf) {
+      const trekPdfUpload = await uploadFile(trekPdf[0].path, "trekking/pdf")
+      if (trekPdfUpload) {
+        uploadedTrekPdf = trekPdfUpload.secure_url
+      }
+    }
+
     // Upload video
     let uploadedVideo: string | undefined
     if (video && video.length > 0) {
@@ -177,6 +188,7 @@ const addTrek = async (
       images: uploadedImages,
       video: uploadedVideo,
       note,
+      trekPdf: uploadedTrekPdf,
     })
 
     // Save trek to database

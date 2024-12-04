@@ -103,6 +103,7 @@ const trekkingSchema = new mongoose.Schema(
     images: { type: [String], default: [] }, // Array of image URLs or paths
     video: { type: String },
     note: { type: String },
+    trekPdf: { type: String },
 
     // other fields
     viewsCount: { type: Number, default: 0 },

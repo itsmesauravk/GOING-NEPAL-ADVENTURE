@@ -4,6 +4,7 @@ import {
   getAllWellness,
   getWellnessBySLug,
   editWellnessVisibility,
+  deleteWellness,
 } from "../controllers/wellness/index.js"
 import uploader from "../utils/multer.js"
 
@@ -84,6 +85,15 @@ router.patch(
     }
   }
 )
+
+// delete
+router.delete("/delete-wellness/:wellnessId", async (req, res, next) => {
+  try {
+    await deleteWellness(req as MulterRequest, res)
+  } catch (error) {
+    next(error)
+  }
+})
 
 // Export the router
 export default router

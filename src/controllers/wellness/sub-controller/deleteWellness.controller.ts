@@ -1,10 +1,13 @@
 import { Request, Response } from "express"
-import Trekking from "../../../models/trekking.model.js"
+import Wellness from "../../../models/wellness.model.js"
 import { StatusCodes } from "http-status-codes"
 import { deleteImage } from "../../../utils/cloudinary.js"
 
 // Deleting single trek
-const deleteTrek = async (req: Request, res: Response): Promise<Response> => {
+const deleteWellness = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const id = req.params.trekId
     if (!id) {
@@ -14,30 +17,30 @@ const deleteTrek = async (req: Request, res: Response): Promise<Response> => {
       })
     }
 
-    const trek = await Trekking.findById(id)
+    const wellness = await Wellness.findById(id)
 
-    if (trek?.thumbnail) {
-      await deleteImage(trek.thumbnail)
+    if (wellness?.thumbnail) {
+      await deleteImage(wellness.thumbnail)
     }
 
-    if (trek && trek.images && trek.images.length > 0) {
-      trek.images.map(async (image) => {
+    if (wellness && wellness.images && wellness.images.length > 0) {
+      wellness.images.map(async (image) => {
         await deleteImage(image)
       })
     }
 
-    const trekDelete = await Trekking.findByIdAndDelete(id)
+    const wellnessDelete = await Wellness.findByIdAndDelete(id)
 
-    if (!trekDelete) {
+    if (!wellnessDelete) {
       return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
-        message: "No trek found",
+        message: "No Wellness found",
       })
     }
 
     return res.status(StatusCodes.OK).json({
       success: true,
-      message: "Trek deleted Successfully",
+      message: "Wellness deleted Successfully",
     })
   } catch (error: any) {
     console.log(error)
@@ -49,4 +52,4 @@ const deleteTrek = async (req: Request, res: Response): Promise<Response> => {
   }
 }
 
-export default deleteTrek
+export default deleteWellness

@@ -24,6 +24,7 @@ const uploadFields = [
   { name: "thumbnail", maxCount: 1 },
   { name: "images", maxCount: 10 },
   { name: "video", maxCount: 1 },
+  { name: "trekPdf", maxCount: 1 },
 ]
 
 //
@@ -67,7 +68,7 @@ router.get("/get-trek/:slug", async (req, res, next) => {
 })
 
 // delete trek
-router.delete("/delete-trek/:id", async (req, res, next) => {
+router.delete("/delete-trek/:trekId", async (req, res, next) => {
   try {
     await deleteTrek(req as MulterRequest, res)
   } catch (error) {
