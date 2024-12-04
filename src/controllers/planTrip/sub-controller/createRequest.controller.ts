@@ -29,6 +29,18 @@ const createRequest = async (req: Request, res: Response) => {
       note,
     } = req.body
 
+    let fullMealType
+
+    if (mealType === "bb") {
+      fullMealType = "Bread & Breakfast"
+    } else if (mealType === "map") {
+      fullMealType = "Half Board (Breakfast and Lunch / Dinner)"
+    } else if (mealType === "ap") {
+      fullMealType = "Full Board (Breakfast, Lunch and Dinner)"
+    } else {
+      fullMealType = ""
+    }
+
     // Validate required fields
     if (
       !destination ||
@@ -61,7 +73,7 @@ const createRequest = async (req: Request, res: Response) => {
       adult: parseInt(adult),
       children: parseInt(children),
       preferedAccomodation,
-      mealType,
+      mealType: fullMealType,
       estimatedBudget: parseInt(estimatedBudget),
       fullName,
       email,
