@@ -14,7 +14,10 @@ const getTrek = async (req: Request, res: Response): Promise<Response> => {
       sort,
       visibility,
       excludeId,
+      maxDays,
     } = req.query
+
+    // days: { min: minDays, max: maxDays },
 
     const queryObject: QueryObjectType = {}
 
@@ -50,7 +53,9 @@ const getTrek = async (req: Request, res: Response): Promise<Response> => {
         "updatedAt",
         "createdAt",
         "price",
-      ] // Define valid fields
+        "days.max",
+        "days.min",
+      ]
       const sortFields = sort
         .split(",")
         .filter((field) => validFields.includes(field.replace("-", "")))
@@ -60,7 +65,6 @@ const getTrek = async (req: Request, res: Response): Promise<Response> => {
         apiData = apiData.sort(sorting)
       }
     } else {
-      // Default sorting, e.g., by createdAt in descending order
       apiData = apiData.sort("-createdAt")
     }
 

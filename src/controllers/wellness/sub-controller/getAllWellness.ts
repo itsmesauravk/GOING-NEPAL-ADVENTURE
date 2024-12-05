@@ -37,6 +37,8 @@ const getAllWellness = async (
         "updatedAt",
         "createdAt",
         "price",
+        "days.max",
+        "days.min",
       ] // Define valid fields
       const sortFields = sort
         .split(",")

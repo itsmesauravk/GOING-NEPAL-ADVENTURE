@@ -40,6 +40,8 @@ const getAllTours = async (req: Request, res: Response): Promise<Response> => {
         "updatedAt",
         "createdAt",
         "price",
+        "days.max",
+        "days.min",
       ] // Define valid fields
       const sortFields = sort
         .split(",")
