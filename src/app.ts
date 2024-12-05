@@ -22,6 +22,8 @@ import wellnessRouter from "./routes/wellness.routes.js"
 import blogRouter from "./routes/blog.routes.js"
 //plan trip
 import planTripRouter from "./routes/planTrip.routes.js"
+//home
+import homeRouter from "./routes/home.routes.js"
 
 //health
 app.use("/", Health)
@@ -35,6 +37,8 @@ app.use("/api/v1/wellness", wellnessRouter)
 app.use("/api/v1/blogs", blogRouter)
 //plan trip
 app.use("/api/v1/plan-trip", planTripRouter)
+//home
+app.use("/api/v1/home", homeRouter)
 
 // default route
 app.get("/", (req, res) => {
