@@ -72,6 +72,11 @@ const tourSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    tripTypeId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "TripsAndTours",
+      required: true,
+    },
     groupSize: {
       min: { type: Number, required: true },
       max: { type: Number, required: true },

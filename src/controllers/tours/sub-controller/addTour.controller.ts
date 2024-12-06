@@ -3,6 +3,7 @@ import Tour from "../../../models/tour.model.js"
 import { uploadFile, uploadVideo } from "../../../utils/cloudinary.js"
 import { StatusCodes } from "http-status-codes"
 import slug from "slug"
+import TripsAndTours from "../../../models/tripsAndTours.model.js"
 
 // Custom MulterRequest to handle multiple file types
 interface MulterRequest extends Request {
@@ -82,7 +83,7 @@ const addTour = async (
     ) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
-        message: "Please provide all required fields.",
+        message: "tESTING",
       })
     }
 
@@ -153,7 +154,8 @@ const addTour = async (
       slug: nameSlug,
       price,
       country,
-      tripType,
+      tripType: JSON.parse(tripType).title,
+      tripTypeId: JSON.parse(tripType).id,
       language: tourLanguage,
       maxAltitude,
       suitableAge,
@@ -183,6 +185,25 @@ const addTour = async (
 
     // Save tour to database
     const savedTour = await newTrek.save()
+
+    //count the total trips document of the given id
+    const totalTours = await Tour.countDocuments({
+      tripTypeId: JSON.parse(tripType).id,
+    })
+
+    //update the total tours of the given id
+    const updatedTripsAndTours = await TripsAndTours.findByIdAndUpdate(
+      JSON.parse(tripType).id,
+      { totalTours },
+      { new: true }
+    )
+
+    if (!savedTour || !updatedTripsAndTours) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: "Error saving trek",
+      })
+    }
 
     return res.status(StatusCodes.CREATED).json({
       success: true,
