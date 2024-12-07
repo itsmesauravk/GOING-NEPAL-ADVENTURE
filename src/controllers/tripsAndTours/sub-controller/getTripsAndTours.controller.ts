@@ -4,7 +4,14 @@ import { StatusCodes } from "http-status-codes"
 
 export const getTripsAndTours = async (req: Request, res: Response) => {
   try {
-    const tripsAndTours = await TripsAndTours.find().select("_id title")
+    const { select } = req.query
+
+    let selectData = ""
+    if (select && typeof select === "string") {
+      selectData = select.split(",").join(" ")
+    }
+
+    const tripsAndTours = await TripsAndTours.find().select(selectData)
     if (!tripsAndTours || tripsAndTours.length === 0) {
       res
         .status(StatusCodes.NOT_FOUND)

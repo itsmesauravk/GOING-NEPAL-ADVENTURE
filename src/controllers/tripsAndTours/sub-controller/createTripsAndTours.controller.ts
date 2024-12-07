@@ -12,9 +12,6 @@ const createTripsAndTours = async (req: MulterRequest, res: Response) => {
     const { title, description } = req.body
     const coverImage = req.file
 
-    console.log(req.body)
-    console.log(req.file)
-
     if (!title || !coverImage) {
       return res
         .status(StatusCodes.BAD_REQUEST)
