@@ -15,6 +15,7 @@ const getTrek = async (req: Request, res: Response): Promise<Response> => {
       visibility,
       excludeId,
       maxDays,
+      location,
     } = req.query
 
     // days: { min: minDays, max: maxDays },
@@ -38,6 +39,9 @@ const getTrek = async (req: Request, res: Response): Promise<Response> => {
     }
     if (excludeId) {
       queryObject._id = { $ne: excludeId as string }
+    }
+    if (location) {
+      queryObject.location = location as string
     }
 
     let apiData = Trekking.find(queryObject)

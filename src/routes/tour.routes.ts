@@ -5,6 +5,7 @@ import {
   getTourBySlug,
   editTourVisibility,
   deleteTour,
+  getTourRegions,
 } from "../controllers/tours/index.js"
 import uploader from "../utils/multer.js"
 
@@ -86,6 +87,15 @@ router.patch("/edit-tour-visibility/:tourId", async (req, res, next) => {
 router.delete("/delete-tour/:tourId", async (req, res, next) => {
   try {
     await deleteTour(req as MulterRequest, res)
+  } catch (error) {
+    next(error)
+  }
+})
+
+//get tour by location
+router.get("/get-tour-regions", async (req, res, next) => {
+  try {
+    await getTourRegions(req as MulterRequest, res)
   } catch (error) {
     next(error)
   }

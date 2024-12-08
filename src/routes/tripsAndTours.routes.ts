@@ -2,6 +2,7 @@ import express from "express"
 
 import {
   createTripsAndTours,
+  deleteTripsAndTours,
   getTripsAndTours,
 } from "../controllers/tripsAndTours/index.js"
 
@@ -19,6 +20,10 @@ router.post("/create", uploader.single("image"), (req, res) => {
 
 router.get("/get", (req, res) => {
   getTripsAndTours(req, res)
+})
+
+router.delete("/delete/:id", (req, res) => {
+  deleteTripsAndTours(req, res)
 })
 
 export default router

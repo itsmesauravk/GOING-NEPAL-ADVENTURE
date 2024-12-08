@@ -6,7 +6,7 @@ import { QueryObjectType } from "../../../utils/types.js"
 // Getting all tours with all the filtration, sorting and pagination
 const getAllTours = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { country, search, updatedAt, sort, visibility, excludeId } =
+    const { country, search, updatedAt, sort, visibility, excludeId, region } =
       req.query
 
     const queryObject: QueryObjectType = {}
@@ -25,6 +25,9 @@ const getAllTours = async (req: Request, res: Response): Promise<Response> => {
 
     if (excludeId) {
       queryObject._id = { $ne: excludeId as string }
+    }
+    if (region) {
+      queryObject.location = region as string
     }
 
     let apiData = Tour.find(queryObject)

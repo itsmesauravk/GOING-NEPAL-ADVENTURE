@@ -6,6 +6,7 @@ import {
   deleteTrek,
   getTrekBySlug,
   editTrekVisibility,
+  getTrekLocation,
 } from "../controllers/trekkings/index.js"
 import uploader from "../utils/multer.js"
 
@@ -80,6 +81,15 @@ router.delete("/delete-trek/:trekId", async (req, res, next) => {
 router.patch("/edit-trek-visibility/:trekId", async (req, res, next) => {
   try {
     await editTrekVisibility(req as MulterRequest, res)
+  } catch (error) {
+    next(error)
+  }
+})
+
+//get trek locations
+router.get("/get-trek-location", async (req, res, next) => {
+  try {
+    await getTrekLocation(req as MulterRequest, res)
   } catch (error) {
     next(error)
   }
