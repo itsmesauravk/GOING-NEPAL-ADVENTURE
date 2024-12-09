@@ -21,13 +21,29 @@ const createActivity = async (req: MulterRequest, res: Response) => {
       price,
       country,
       location,
-      groupSize,
+      groupSizeMin,
+      groupSizeMax,
       bestSeason,
       overview,
       serviceIncludes,
       thingsToKnow,
       FAQs,
     } = req.body
+
+    const groupSize = {
+      min: groupSizeMin,
+      max: groupSizeMax,
+    }
+
+    // console.log(req.body)
+
+    // const test = false
+    // if (!test) {
+    //   return res.status(StatusCodes.OK).json({
+    //     success: false,
+    //     message: "Activity created successfully",
+    //   })
+    // }
 
     // Manual validation for required fields
     if (
@@ -53,13 +69,19 @@ const createActivity = async (req: MulterRequest, res: Response) => {
 
     // Upload thumbnail
     const thumbnailUrl = thumbnail
-      ? await uploadFile(thumbnail[0].path, "/activities/thumbnail")
+      ? (await uploadFile(thumbnail[0].path, "/activities/thumbnail"))
+          ?.secure_url
       : null
 
     // Upload image images
     const galleryUrls = image
       ? await Promise.all(
-          image.map((img) => uploadFile(img.path, "/activities/image"))
+          image.map(
+            async (img) =>
+              (
+                await uploadFile(img.path, "/activities/image")
+              )?.secure_url
+          )
         )
       : []
 
@@ -76,12 +98,12 @@ const createActivity = async (req: MulterRequest, res: Response) => {
       country,
       location,
       groupSize,
-      bestSeason,
+      bestSeason: JSON.parse(bestSeason),
       thumbnail: thumbnailUrl,
       overview,
-      serviceIncludes,
-      thingsToKnow: thingsToKnow || "",
-      FAQs: FAQs || [],
+      serviceIncludes: JSON.parse(serviceIncludes),
+      thingsToKnow: JSON.parse(thingsToKnow) || "",
+      FAQs: JSON.parse(FAQs) || [],
       gallery: galleryUrls,
       video: videoUrl,
     })
@@ -91,7 +113,6 @@ const createActivity = async (req: MulterRequest, res: Response) => {
     return res.status(StatusCodes.CREATED).json({
       success: true,
       message: "Activity created successfully",
-      data: newActivity,
     })
   } catch (error: any) {
     console.error("Error creating activity:", error.message)

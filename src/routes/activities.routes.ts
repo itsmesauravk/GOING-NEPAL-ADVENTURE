@@ -6,6 +6,7 @@ import {
   createActivity,
   getActivities,
 } from "../controllers/activities/index.js"
+import getSingleActivity from "../controllers/activities/sub-controller/getSingleActivity.controller.js"
 
 const uploadFields = [
   { name: "thumbnail", maxCount: 1 },
@@ -31,6 +32,10 @@ router.post(
 
 router.get("/get-activities", async (req, res) => {
   await getActivities(req, res)
+})
+
+router.get("/get-activity-by-slug/:slug", async (req, res) => {
+  await getSingleActivity(req, res)
 })
 
 export default router
