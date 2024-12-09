@@ -1,5 +1,21 @@
+import { link } from "fs"
 import mongoose from "mongoose"
 import { title } from "process"
+import { text } from "stream/consumers"
+
+const linksSchema = new mongoose.Schema(
+  {
+    text: {
+      type: String,
+    },
+    url: {
+      type: String,
+    },
+  },
+  {
+    _id: false,
+  }
+)
 
 const blogSchema = new mongoose.Schema(
   {
@@ -20,6 +36,7 @@ const blogSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    links: [linksSchema],
 
     blogViews: {
       type: Number,

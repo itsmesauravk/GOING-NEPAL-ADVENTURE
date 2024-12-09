@@ -10,7 +10,7 @@ interface MulterRequest extends Request {
 
 const addBlog = async (req: MulterRequest, res: Response) => {
   try {
-    const { title, description } = req.body
+    const { title, description, links } = req.body
     const image = req.file
 
     if (!title || !description || !image) {
@@ -33,6 +33,7 @@ const addBlog = async (req: MulterRequest, res: Response) => {
       title,
       slug: blogSlug,
       description,
+      links: JSON.parse(links),
       blogImage: uploadImage.secure_url,
     })
 
