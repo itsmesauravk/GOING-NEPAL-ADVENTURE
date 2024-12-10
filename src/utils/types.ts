@@ -28,3 +28,11 @@ export interface ActivityQueryObjectType {
   [key: string]: string | undefined | { $ne: string } | object
   _id?: { $ne: string }
 }
+
+export interface RequestQueryObjectType {
+  requestType?: string
+  itemType?: string
+  status?: string
+  search?: string
+  sort?: string
+}

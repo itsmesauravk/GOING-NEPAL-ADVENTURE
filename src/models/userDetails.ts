@@ -22,7 +22,6 @@ const userDetailsSchema = new mongoose.Schema(
     // user country
     userCountry: {
       type: String,
-      required: true,
     },
   },
   {

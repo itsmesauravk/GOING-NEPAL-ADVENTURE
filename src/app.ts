@@ -30,6 +30,8 @@ import tripsAndToursRouter from "./routes/tripsAndTours.routes.js"
 import activitiesRouter from "./routes/activities.routes.js"
 //user details
 import useDetailsRoutes from "./routes/userDetails.routes.js"
+//quoteAndCustomize
+import quoteAndCustomize from "./routes/quoteAndCustomize.js"
 
 //health
 app.use("/", Health)
@@ -51,6 +53,8 @@ app.use("/api/v1/trips-and-tours", tripsAndToursRouter)
 app.use("/api/v1/activities", activitiesRouter)
 //user details
 app.use("/api/v1/users", useDetailsRoutes)
+//quoteAndCustomize
+app.use("/api/v1/quote-and-customize", quoteAndCustomize)
 
 // default route
 app.get("/", (req, res) => {
