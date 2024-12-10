@@ -52,6 +52,10 @@ const highlightSchema = new mongoose.Schema(
 // Main schema
 const wellnessSchema = new mongoose.Schema(
   {
+    category: {
+      type: String,
+      default: "Wellness",
+    },
     name: { type: String, required: true },
     slug: { type: String, unique: true, default: "" },
     price: { type: Number, required: true },

@@ -65,6 +65,10 @@ const trekHighlightSchema = new mongoose.Schema(
 // Main trekking schema
 const trekkingSchema = new mongoose.Schema(
   {
+    category: {
+      type: String,
+      default: "Trekking",
+    },
     name: { type: String, required: true },
     slug: { type: String, unique: true, default: "" },
     price: { type: Number, required: true },

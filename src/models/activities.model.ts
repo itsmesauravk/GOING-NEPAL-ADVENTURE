@@ -17,6 +17,10 @@ const faqsSchema = new mongoose.Schema(
 
 const activitySchema = new mongoose.Schema(
   {
+    category: {
+      type: String,
+      default: "Activity",
+    },
     title: {
       type: String,
       required: true,

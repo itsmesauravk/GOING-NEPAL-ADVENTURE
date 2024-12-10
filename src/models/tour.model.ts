@@ -52,6 +52,10 @@ const highlightSchema = new mongoose.Schema(
 // Main schema
 const tourSchema = new mongoose.Schema(
   {
+    category: {
+      type: String,
+      default: "Tour",
+    },
     name: { type: String, required: true },
     slug: { type: String, unique: true, default: "" },
     price: { type: Number, required: true },

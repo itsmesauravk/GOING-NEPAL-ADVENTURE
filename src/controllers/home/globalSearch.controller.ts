@@ -24,8 +24,9 @@ const globalSearch = async (req: Request, res: Response) => {
     // Aggregation for global search with total count
     const results = await Trekking.aggregate([
       { $match: query }, // Filter `trekkings`
-      { $unionWith: { coll: "Tours", pipeline: [{ $match: query }] } },
+      { $unionWith: { coll: "tours", pipeline: [{ $match: query }] } },
       { $unionWith: { coll: "wellnesses", pipeline: [{ $match: query }] } },
+      { $unionWith: { coll: "activities", pipeline: [{ $match: query }] } },
       {
         $facet: {
           metadata: [{ $count: "totalCount" }], // Count total documents

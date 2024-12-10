@@ -19,6 +19,10 @@ const linksSchema = new mongoose.Schema(
 
 const blogSchema = new mongoose.Schema(
   {
+    category: {
+      type: String,
+      default: "Blog",
+    },
     title: {
       type: String,
       required: true,

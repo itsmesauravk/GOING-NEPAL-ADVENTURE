@@ -3,6 +3,10 @@ import mongoose from "mongoose"
 
 const planTripSchema = new mongoose.Schema(
   {
+    category: {
+      type: String,
+      default: "PlanTrip",
+    },
     //destination
     destination: {
       type: String,
