@@ -4,6 +4,7 @@ import uploader from "../utils/multer.js"
 
 import {
   createActivity,
+  deleteActivity,
   getActivities,
 } from "../controllers/activities/index.js"
 import getSingleActivity from "../controllers/activities/sub-controller/getSingleActivity.controller.js"
@@ -36,6 +37,10 @@ router.get("/get-activities", async (req, res) => {
 
 router.get("/get-activity-by-slug/:slug", async (req, res) => {
   await getSingleActivity(req, res)
+})
+
+router.delete("/delete-activity/:id", async (req, res) => {
+  await deleteActivity(req, res)
 })
 
 export default router

@@ -32,7 +32,7 @@ const getAllBlogs = async (req: Request, res: Response) => {
     }
 
     let page = Number(req.query.page) || 1
-    let limit = Number(req.query.limit) || 10
+    let limit = Number(req.query.limit) || 100
     let skip = (page - 1) * limit
 
     const blogs = await blog.skip(skip).limit(limit)

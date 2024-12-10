@@ -13,7 +13,9 @@ const getSingleActivity = async (req: Request, res: Response) => {
       })
     }
 
-    const activity = await Activity.findOne({ slug, isActivated: true })
+    const activity = await Activity.findOne({ slug, isActivated: true }).select(
+      "-isAcitvated "
+    )
     if (!activity) {
       return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
@@ -22,6 +24,7 @@ const getSingleActivity = async (req: Request, res: Response) => {
     }
     res.status(StatusCodes.OK).json({
       success: true,
+      message: "Activity fetched successfully",
       data: activity,
     })
   } catch (error: any) {

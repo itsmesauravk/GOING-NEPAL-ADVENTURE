@@ -17,3 +17,14 @@ export interface BlogQueryObjectType {
   visibility?: "isNewBlog" | "isActive"
   [key: string]: string | undefined
 }
+
+export interface ActivityQueryObjectType {
+  title?: string
+  country?: string
+  updatedAt?: string
+  difficulty?: string
+  sort?: string
+  visibility?: "isPopular" | "isActivated"
+  [key: string]: string | undefined | { $ne: string } | object
+  _id?: { $ne: string }
+}

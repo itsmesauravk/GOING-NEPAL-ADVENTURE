@@ -28,6 +28,8 @@ import homeRouter from "./routes/home.routes.js"
 import tripsAndToursRouter from "./routes/tripsAndTours.routes.js"
 //acitivities
 import activitiesRouter from "./routes/activities.routes.js"
+//user details
+import useDetailsRoutes from "./routes/userDetails.routes.js"
 
 //health
 app.use("/", Health)
@@ -47,6 +49,8 @@ app.use("/api/v1/home", homeRouter)
 app.use("/api/v1/trips-and-tours", tripsAndToursRouter)
 //activities
 app.use("/api/v1/activities", activitiesRouter)
+//user details
+app.use("/api/v1/users", useDetailsRoutes)
 
 // default route
 app.get("/", (req, res) => {
