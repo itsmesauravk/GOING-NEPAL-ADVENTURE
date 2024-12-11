@@ -33,7 +33,7 @@ router.get("/total-pending-trip-requests", (req, res) => {
   getPendingTripRequestsCount(req, res)
 })
 
-router.post("/send-mail", uploader.fields(uploadFields), (req, res) => {
+router.post("/send-mail/:id", uploader.fields(uploadFields), (req, res) => {
   sendMail(req as MulterRequest, res)
 })
 

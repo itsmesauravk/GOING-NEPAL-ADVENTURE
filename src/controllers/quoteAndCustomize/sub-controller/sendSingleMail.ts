@@ -1,4 +1,4 @@
-import PlanTrip from "../../../models/planTrip.model.js"
+import QuoteAndCustomize from "../../../models/quoteAndCustomize.js"
 import { Request, Response } from "express"
 import { StatusCodes } from "http-status-codes"
 import { uploadFile } from "../../../utils/cloudinary.js"
@@ -10,7 +10,7 @@ interface MulterRequest extends Request {
   }
 }
 
-const sendMail = async (req: MulterRequest, res: Response) => {
+const sendSingleMail = async (req: MulterRequest, res: Response) => {
   try {
     const { recipient, subject, message, name } = req.body
     const attachments = req.files?.attachments || []
@@ -80,7 +80,7 @@ const sendMail = async (req: MulterRequest, res: Response) => {
       `
     sendSingleEmail(recipient, subject, mailContent)
 
-    await PlanTrip.findOneAndUpdate(
+    await QuoteAndCustomize.findOneAndUpdate(
       { _id: req.params.id },
       {
         $set: { status: "mailed" },
@@ -101,4 +101,4 @@ const sendMail = async (req: MulterRequest, res: Response) => {
   }
 }
 
-export default sendMail
+export default sendSingleMail

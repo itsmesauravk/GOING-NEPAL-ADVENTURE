@@ -40,7 +40,7 @@ const quoteAndCustomizeSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
-      enum: ["pending", "viewed"],
+      enum: ["pending", "viewed", "mailed"],
       default: "pending",
     },
   },
