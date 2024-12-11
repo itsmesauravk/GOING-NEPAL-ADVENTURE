@@ -23,6 +23,7 @@ const uploadFile = async (file: string, folder: string) => {
   try {
     const uploadResult = await cloudinary.uploader.upload(file, {
       folder: `/Going Nepal Adventure/${folder}`,
+      options: { resource_type: "auto" },
     })
 
     if (!uploadResult) {
