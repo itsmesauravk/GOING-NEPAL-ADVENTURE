@@ -38,7 +38,7 @@ const createRequest = async (req: Request, res: Response) => {
     }
 
     //update user details
-    const user = await UserDetails.find({ email: email })
+    const user = await UserDetails.find({ userEmail: email })
     if (!user || user.length === 0) {
       const newUser = new UserDetails({
         userEmail: email,

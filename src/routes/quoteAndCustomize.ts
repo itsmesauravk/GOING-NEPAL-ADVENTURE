@@ -2,6 +2,7 @@ import express from "express"
 const router = express.Router()
 
 import {
+  bulkMailing,
   createRequest,
   getPendingCount,
   getRequests,
@@ -42,5 +43,9 @@ router.post(
     sendSingleMail(req as MulterRequest, res)
   }
 )
+
+router.post("/send-bulk-mail", uploader.fields(uploadFields), (req, res) => {
+  bulkMailing(req as MulterRequest, res)
+})
 
 export default router
