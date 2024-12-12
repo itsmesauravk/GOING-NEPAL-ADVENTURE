@@ -93,12 +93,12 @@ const loginAdmin = async (req: Request, res: Response) => {
     res
       .cookie("accessToken", accessToken, {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === "production",
         sameSite: "none",
       })
       .cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === "production",
         sameSite: "none",
       })
       .status(StatusCodes.OK)
@@ -121,12 +121,12 @@ const logoutAdmin = async (req: Request, res: Response) => {
     res
       .clearCookie("accessToken", {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === "production",
         sameSite: "none",
       })
       .clearCookie("refreshToken", {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === "production",
         sameSite: "none",
       })
 
