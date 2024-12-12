@@ -93,11 +93,13 @@ const loginAdmin = async (req: Request, res: Response) => {
     res
       .cookie("accessToken", accessToken, {
         httpOnly: true,
-        secure: true,
+        // secure: true,
+        sameSite: "strict",
       })
       .cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: true,
+        // secure: true,
+        sameSite: "strict",
       })
       .status(StatusCodes.OK)
       .json({
@@ -114,4 +116,22 @@ const loginAdmin = async (req: Request, res: Response) => {
   }
 }
 
-export { registerAdmin, loginAdmin }
+const logoutAdmin = async (req: Request, res: Response) => {
+  try {
+    res
+      .clearCookie("accessToken", { httpOnly: true, sameSite: "strict" })
+      .clearCookie("refreshToken", { httpOnly: true, sameSite: "strict" })
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: "Admin logged out successfully",
+    })
+  } catch (error: any) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: error.message || "Internal server error",
+    })
+  }
+}
+
+export { registerAdmin, loginAdmin, logoutAdmin }
