@@ -93,13 +93,13 @@ const loginAdmin = async (req: Request, res: Response) => {
     res
       .cookie("accessToken", accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        secure: true,
+        sameSite: "none",
       })
       .cookie("refreshToken", accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        secure: true,
+        sameSite: "none",
       })
       .status(StatusCodes.OK)
       .json({
@@ -121,13 +121,13 @@ const logoutAdmin = async (req: Request, res: Response) => {
     res
       .cookie("accessToken", {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        secure: true,
+        sameSite: "none",
       })
       .cookie("refreshToken", {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        secure: true,
+        sameSite: "none",
       })
 
     res.status(StatusCodes.OK).json({
