@@ -1,6 +1,7 @@
 import express from "express"
 import dotenv from "dotenv"
 import cors from "cors"
+import cookieParser from "cookie-parser"
 
 const app = express()
 
@@ -8,7 +9,13 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 dotenv.config()
-app.use(cors())
+app.use(
+  cors({
+    origin: ["https://gna-admin-panel.vercel.app", "http://localhost:3000"],
+    credentials: true,
+  })
+)
+app.use(cookieParser())
 
 //routers
 import Health from "./routes/health/healthcheck.router.js"
@@ -32,6 +39,8 @@ import activitiesRouter from "./routes/activities.routes.js"
 import useDetailsRoutes from "./routes/userDetails.routes.js"
 //quoteAndCustomize
 import quoteAndCustomize from "./routes/quoteAndCustomize.js"
+//admin
+import adminRouter from "./routes/admin.routes.js"
 
 //health
 app.use("/", Health)
@@ -55,6 +64,8 @@ app.use("/api/v1/activities", activitiesRouter)
 app.use("/api/v1/users", useDetailsRoutes)
 //quoteAndCustomize
 app.use("/api/v1/quote-and-customize", quoteAndCustomize)
+//admin
+app.use("/api/v1/admin", adminRouter)
 
 // default route
 app.get("/", (req, res) => {
