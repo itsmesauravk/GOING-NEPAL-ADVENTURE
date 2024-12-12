@@ -91,8 +91,16 @@ const loginAdmin = async (req: Request, res: Response) => {
     )
 
     res
-      .cookie("accessToken", accessToken)
-      .cookie("refreshToken", refreshToken)
+      .cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
+      .cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
       .status(StatusCodes.OK)
       .json({
         success: true,
@@ -110,7 +118,17 @@ const loginAdmin = async (req: Request, res: Response) => {
 
 const logoutAdmin = async (req: Request, res: Response) => {
   try {
-    res.clearCookie("accessToken").clearCookie("refreshToken")
+    res
+      .clearCookie("accessToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
+      .clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
 
     res.status(StatusCodes.OK).json({
       success: true,
