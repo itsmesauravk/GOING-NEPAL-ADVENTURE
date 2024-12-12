@@ -1,31 +1,85 @@
+import { Request, Response } from "express"
+import { StatusCodes } from "http-status-codes"
 import Trekking from "../../models/trekking.model.js"
 import Tour from "../../models/tour.model.js"
 import Wellness from "../../models/wellness.model.js"
 import Blog from "../../models/blog.model.js"
 import PlanTrip from "../../models/planTrip.model.js"
+import Activity from "../../models/activities.model.js"
+import QuoteAndCustomize from "../../models/quoteAndCustomize.js"
+import UserDetails from "../../models/userDetails.js"
 
-import { Request, Response } from "express"
-import { StatusCodes } from "http-status-codes"
+import { Model } from "mongoose"
 
-// getting all the count details for dashboard
+const countDocuments = async (model: Model<any>, filter = {}) =>
+  await model.countDocuments(filter)
+
 const getCountDetails = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
   try {
-    const trekkingCount = await Trekking.countDocuments()
-    const tourCount = await Tour.countDocuments()
-    const wellnessCount = await Wellness.countDocuments()
-    const blogCount = await Blog.countDocuments()
-    const planTripCount = await PlanTrip.countDocuments()
-
-    //count pending and completed planTripCount
-    const pendingPlanTripCount = await PlanTrip.countDocuments({
-      status: "pending",
-    })
-    const viewedPlanTripCount = await PlanTrip.countDocuments({
-      status: "viewed",
-    })
+    const [
+      trekkingCount,
+      tourCount,
+      wellnessCount,
+      blogCount,
+      planTripCountTotal,
+      pendingPlanTripCount,
+      viewedPlanTripCount,
+      mailedPlanTripCount,
+      activityCountTotal,
+      activityPopularCount,
+      activityActiveCount,
+      quoteCountTotal,
+      quotePendingCount,
+      quoteViewedCount,
+      quoteMailedCount,
+      customizeCountTotal,
+      customizePendingCount,
+      customizeViewedCount,
+      customizeMailedCount,
+      usersCount,
+    ] = await Promise.all([
+      countDocuments(Trekking),
+      countDocuments(Tour),
+      countDocuments(Wellness),
+      countDocuments(Blog),
+      countDocuments(PlanTrip),
+      countDocuments(PlanTrip, { status: "pending" }),
+      countDocuments(PlanTrip, { status: "viewed" }),
+      countDocuments(PlanTrip, { status: "mailed" }),
+      countDocuments(Activity),
+      countDocuments(Activity, { isPopular: true }),
+      countDocuments(Activity, { isActivated: true }),
+      countDocuments(QuoteAndCustomize, { requestType: "quote" }),
+      countDocuments(QuoteAndCustomize, {
+        requestType: "quote",
+        status: "pending",
+      }),
+      countDocuments(QuoteAndCustomize, {
+        requestType: "quote",
+        status: "viewed",
+      }),
+      countDocuments(QuoteAndCustomize, {
+        requestType: "quote",
+        status: "mailed",
+      }),
+      countDocuments(QuoteAndCustomize, { requestType: "customize" }),
+      countDocuments(QuoteAndCustomize, {
+        requestType: "customize",
+        status: "pending",
+      }),
+      countDocuments(QuoteAndCustomize, {
+        requestType: "customize",
+        status: "viewed",
+      }),
+      countDocuments(QuoteAndCustomize, {
+        requestType: "customize",
+        status: "mailed",
+      }),
+      countDocuments(UserDetails),
+    ])
 
     return res.status(StatusCodes.OK).json({
       success: true,
@@ -35,16 +89,39 @@ const getCountDetails = async (
         tourCount,
         wellnessCount,
         blogCount,
-        planTripCount,
-        pendingPlanTripCount,
-        viewedPlanTripCount,
+        planTripCount: {
+          total: planTripCountTotal,
+          pending: pendingPlanTripCount,
+          viewed: viewedPlanTripCount,
+          mailed: mailedPlanTripCount,
+        },
+        activityCount: {
+          total: activityCountTotal,
+          popular: activityPopularCount,
+          active: activityActiveCount,
+        },
+        quoteAndCustomizeCount: {
+          quote: {
+            total: quoteCountTotal,
+            pending: quotePendingCount,
+            viewed: quoteViewedCount,
+            mailed: quoteMailedCount,
+          },
+          customize: {
+            total: customizeCountTotal,
+            pending: customizePendingCount,
+            viewed: customizeViewedCount,
+            mailed: customizeMailedCount,
+          },
+        },
+        usersCount,
       },
     })
-  } catch (error: any) {
+  } catch (error) {
+    console.error("Error fetching count details:", error)
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: "Internal Server Error",
-      error: error.message,
     })
   }
 }

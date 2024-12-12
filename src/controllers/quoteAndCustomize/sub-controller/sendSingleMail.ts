@@ -15,8 +15,13 @@ const sendSingleMail = async (req: MulterRequest, res: Response) => {
     const { recipient, subject, message, name } = req.body
     const attachments = req.files?.attachments || []
 
+    const reqId = req.params.id
+
+    console.log(req.body)
+    console.log(reqId)
+
     // Validate inputs
-    if (!recipient || !subject || !message) {
+    if (!recipient || !subject || !message || !reqId) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .json({ success: false, message: "All fields are required" })
@@ -81,7 +86,7 @@ const sendSingleMail = async (req: MulterRequest, res: Response) => {
     sendSingleEmail(recipient, subject, mailContent)
 
     await QuoteAndCustomize.findOneAndUpdate(
-      { _id: req.params.id },
+      { _id: reqId },
       {
         $set: { status: "mailed" },
       }
