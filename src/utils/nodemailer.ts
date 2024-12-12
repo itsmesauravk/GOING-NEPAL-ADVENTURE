@@ -34,29 +34,50 @@ const sendSingleEmail = (email: string, subject: string, content: string) => {
 
 // multi user mail send (bulk mail)
 
+// const sendBulkEmails = async (
+//   email: string[],
+//   subject: string,
+//   content: string
+// ) => {
+//   try {
+//     let mailOptions = {
+//       from: `${process.env.AUTH_EMAIL}`,
+//       to: email,
+//       subject: subject,
+//       text: content,
+//     }
+//     transporter.sendMail(mailOptions, function (error, info) {
+//       if (error) {
+//         console.log(error)
+//         return false
+//       } else {
+//         console.log("Email sent: " + info.response)
+//         return true
+//       }
+//     })
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
+
 const sendBulkEmail = async (
-  email: string[],
-  subject: string,
+  emails: string[], // Array of email addresses eg ["email1@gmail.com", "email2@gmail.com"]
+  subject: string, // Email subject
   content: string
 ) => {
   try {
-    let mailOptions = {
-      from: `${process.env.AUTH_EMAIL}`,
-      to: email,
+    const mailOptions = {
+      from: process.env.AUTH_EMAIL,
+      to: emails.join(","), // Convert array to comma-separated string
       subject: subject,
-      text: content,
+      html: content, // Use HTML content for better email formatting
     }
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error)
-        return false
-      } else {
-        console.log("Email sent: " + info.response)
-        return true
-      }
-    })
+
+    // Send the email and await the promise
+    return await transporter.sendMail(mailOptions)
   } catch (error) {
-    console.log(error)
+    console.error("Error sending bulk email:", error)
+    throw new Error("Failed to send email.")
   }
 }
 
