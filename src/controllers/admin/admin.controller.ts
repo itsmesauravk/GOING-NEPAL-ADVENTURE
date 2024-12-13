@@ -95,8 +95,6 @@ const loginAdmin = async (req: Request, res: Response) => {
         httpOnly: true,
         secure: true,
         sameSite: "none",
-        path: "/",
-        domain: "gna-admin-panel.vercel.app",
       })
       .cookie("refreshToken", accessToken, {
         httpOnly: true,
