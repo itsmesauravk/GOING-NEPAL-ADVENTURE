@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: true }))
 dotenv.config()
 app.use(
   cors({
-    origin: ["https://gna-admin-panel.vercel.app", "http://localhost:3000"],
+    origin: "https://gna-admin-panel.vercel.app",
     credentials: true,
   })
 )
