@@ -36,3 +36,35 @@ export interface RequestQueryObjectType {
   search?: string
   sort?: string
 }
+
+import { Document } from "mongoose"
+
+export interface AdminTypes {
+  fullName: string
+  email: string
+  phoneNumber?: string | null
+  profilePicture?: string | null
+  password: string
+  isActive: boolean
+  isSuspended: boolean
+  role: "Admin" | "Moderator"
+  twoFactorEnabled: boolean
+  createdAt: Date
+  updatedAt: Date
+  lastLoginAt?: Date | null
+  lastLoginIP?: string | null
+  loginHistory: {
+    ip: string
+    timestamp: Date
+  }[]
+  failedLoginAttempts: number
+  lastFailedLoginAt?: Date | null
+  securityQuestions: {
+    question: string
+    answer: string
+  }[]
+  oneTimePassword?: number | null
+  refreshToken?: string | null
+}
+// Extend Mongoose's Document with the Admin interface
+export interface AdminDocument extends Document, AdminTypes {}

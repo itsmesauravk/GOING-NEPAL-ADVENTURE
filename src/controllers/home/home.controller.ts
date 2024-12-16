@@ -14,10 +14,7 @@ import { Model } from "mongoose"
 const countDocuments = async (model: Model<any>, filter = {}) =>
   await model.countDocuments(filter)
 
-const getCountDetails = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+const getCountDetails = async (req: Request, res: Response): Promise<void> => {
   try {
     const [
       trekkingCount,
@@ -81,7 +78,7 @@ const getCountDetails = async (
       countDocuments(UserDetails),
     ])
 
-    return res.status(StatusCodes.OK).json({
+    res.status(StatusCodes.OK).json({
       success: true,
       message: "Count details fetched successfully",
       data: {
@@ -119,7 +116,7 @@ const getCountDetails = async (
     })
   } catch (error) {
     console.error("Error fetching count details:", error)
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: "Internal Server Error",
     })

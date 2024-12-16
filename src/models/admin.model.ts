@@ -1,9 +1,13 @@
-import mongoose, { CallbackWithoutResultAndOptionalError } from "mongoose"
+import mongoose, {
+  CallbackWithoutResultAndOptionalError,
+  Model,
+} from "mongoose"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import { AdminTypes, AdminDocument } from "../utils/types"
 
 // Admin Schema
-const adminSchema = new mongoose.Schema(
+const adminSchema = new mongoose.Schema<AdminTypes>(
   {
     fullName: {
       type: String,

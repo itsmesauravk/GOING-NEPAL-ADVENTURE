@@ -4,7 +4,7 @@ import Trekking from "../../models/trekking.model.js"
 import Tour from "../../models/tour.model.js"
 import Wellness from "../../models/wellness.model.js"
 
-const globalSearch = async (req: Request, res: Response) => {
+const globalSearch = async (req: Request, res: Response): Promise<void> => {
   try {
     const { search, sort, page = 1, limit = 20 } = req.query
 
@@ -48,10 +48,11 @@ const globalSearch = async (req: Request, res: Response) => {
     const response = results[0] || { totalCount: 0, data: [] }
 
     if (response.data.length === 0) {
-      return res.status(StatusCodes.NOT_FOUND).json({
+      res.status(StatusCodes.NOT_FOUND).json({
         success: false,
         message: "No results found",
       })
+      return
     }
 
     res.status(StatusCodes.OK).json({

@@ -1,14 +1,11 @@
 import express from "express"
 import { getCountDetails } from "../controllers/home/home.controller.js"
-import globalSearch from "../controllers/home/globalSearch.controller.js"
+
 const router = express.Router()
 
+import auth from "../middlewares/auth.js"
+
 // routes
-router.get("/get-count-details", (req, res) => {
-  getCountDetails(req, res)
-})
-router.get("/search", (req, res) => {
-  globalSearch(req, res)
-})
+router.get("/get-count-details", auth, getCountDetails)
 
 export default router
