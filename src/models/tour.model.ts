@@ -108,8 +108,7 @@ const tourSchema = new mongoose.Schema(
     viewsCount: { type: Number, default: 0 },
     isFeatured: { type: Boolean, default: true },
     isPopular: { type: Boolean, default: false },
-    isRecommended: { type: Boolean, default: false },
-    isNewItem: { type: Boolean, default: false },
+
     isActivated: { type: Boolean, default: true },
   },
   {

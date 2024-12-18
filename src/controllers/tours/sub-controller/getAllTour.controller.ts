@@ -19,8 +19,29 @@ const getAllTours = async (req: Request, res: Response): Promise<Response> => {
       queryObject.name = { $regex: search, $options: "i" } as any
     }
 
-    if (visibility && typeof visibility === "string") {
+    // if (visibility && typeof visibility === "string") {
+    //   queryObject[visibility] = "true" as string
+    // }
+    if (visibility === "all") {
+      // No additional filter admin want to see all treks
+    } else if (
+      visibility === "isActivated" ||
+      visibility === "isPopular" ||
+      visibility === "isNewItem" ||
+      visibility === "isFeatured"
+    ) {
       queryObject[visibility] = "true" as string
+    } else if (visibility === "notActivated") {
+      queryObject.isActivated = "false" as string
+    } else if (visibility === "notPopular") {
+      queryObject.isPopular = "false" as string
+    } else if (visibility === "notNewItem") {
+      queryObject.isNewItem = "false" as string
+    } else if (visibility === "notFeatured") {
+      queryObject.isFeatured = "false" as string
+    } else {
+      // default: only show activated treks
+      queryObject.isActivated = "true" as string
     }
 
     if (excludeId) {

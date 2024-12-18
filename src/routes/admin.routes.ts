@@ -1,6 +1,7 @@
 import express from "express"
 import {
   adminProfile,
+  getFullAdminProfile,
   loginAdmin,
   logoutAdmin,
   registerAdmin,
@@ -34,5 +35,7 @@ router.post("/validate", async (req, res) => {
 router.post("/refresh-token", async (req, res) => {
   updateAccessToken(req, res)
 })
+
+router.get("/my-account/:id", getFullAdminProfile)
 
 export default router

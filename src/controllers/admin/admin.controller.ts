@@ -121,13 +121,21 @@ const adminProfile = async (req: Request, res: Response) => {
         message: "Unauthorized access. Token missing.",
       })
     }
+
+    const { s } = req.query
+
+    let selected
+    if (s === "a") {
+      selected = "-password"
+    } else {
+      selected = "_id fullName email createdAt"
+    }
+
     const decodedToken = jwt.verify(
       token,
       process.env.JWT_ACCESS_TOKEN_SECRET as string
     ) as DecodedToken
-    const admin = await Admin.findById(decodedToken.id).select(
-      "_id fullName email createdAt"
-    )
+    const admin = await Admin.findById(decodedToken.id).select(selected)
 
     if (!admin) {
       return res.status(StatusCodes.NOT_FOUND).json({
@@ -265,6 +273,41 @@ const validateToken = async (req: Request, res: Response) => {
   }
 }
 
+const getFullAdminProfile = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const adminId = req.params.id
+    if (!adminId) {
+      res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: "Please provide Admin ID",
+      })
+      return
+    }
+    const admin = await Admin.findById(adminId).select("-password")
+
+    if (!admin) {
+      res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: "Admin not found",
+      })
+      return
+    }
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      data: admin,
+    })
+  } catch (error: any) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: error.message || "Internal server error",
+    })
+  }
+}
+
 export {
   registerAdmin,
   loginAdmin,
@@ -272,4 +315,5 @@ export {
   adminProfile,
   updateAccessToken,
   validateToken,
+  getFullAdminProfile,
 }
