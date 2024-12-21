@@ -33,11 +33,7 @@ const getTripRequests = async (req: Request, res: Response) => {
 
     const total = await PlanTrip.countDocuments(queryObject)
 
-    console.log(total, "ttl")
-
     const totalPages = Math.ceil(total / limit)
-
-    console.log(totalPages, "pgs")
 
     const requests = await tripRequests
 

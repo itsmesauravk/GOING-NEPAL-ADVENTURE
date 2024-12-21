@@ -1,6 +1,7 @@
 import express from "express"
 import {
   createRequest,
+  deleteRequest,
   getPendingTripRequestsCount,
   getSingleTripRequest,
   getTripRequests,
@@ -36,5 +37,7 @@ router.get("/total-pending-trip-requests", (req, res) => {
 router.post("/send-mail/:id", uploader.fields(uploadFields), (req, res) => {
   sendMail(req as MulterRequest, res)
 })
+
+router.delete("/delete-request/:id", deleteRequest)
 
 export default router
