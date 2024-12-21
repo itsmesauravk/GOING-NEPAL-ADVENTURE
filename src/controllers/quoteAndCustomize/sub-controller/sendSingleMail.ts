@@ -17,9 +17,6 @@ const sendSingleMail = async (req: MulterRequest, res: Response) => {
 
     const reqId = req.params.id
 
-    console.log(req.body)
-    console.log(reqId)
-
     // Validate inputs
     if (!recipient || !subject || !message || !reqId) {
       return res
@@ -89,7 +86,8 @@ const sendSingleMail = async (req: MulterRequest, res: Response) => {
       { _id: reqId },
       {
         $set: { status: "mailed" },
-      }
+      },
+      { new: true }
     )
 
     res.status(StatusCodes.OK).json({

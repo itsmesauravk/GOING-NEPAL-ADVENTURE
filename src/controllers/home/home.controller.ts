@@ -18,9 +18,13 @@ const getCountDetails = async (req: Request, res: Response): Promise<void> => {
   try {
     const [
       trekkingCount,
+      activeTrekingCount,
       tourCount,
+      activeTourCount,
       wellnessCount,
+      activeWellnessCount,
       blogCount,
+      activeBlogCount,
       planTripCountTotal,
       pendingPlanTripCount,
       viewedPlanTripCount,
@@ -39,9 +43,13 @@ const getCountDetails = async (req: Request, res: Response): Promise<void> => {
       usersCount,
     ] = await Promise.all([
       countDocuments(Trekking),
+      countDocuments(Trekking, { isActivated: true }),
       countDocuments(Tour),
+      countDocuments(Tour, { isActivated: true }),
       countDocuments(Wellness),
+      countDocuments(Wellness, { isActivated: true }),
       countDocuments(Blog),
+      countDocuments(Blog, { isActive: true }),
       countDocuments(PlanTrip),
       countDocuments(PlanTrip, { status: "pending" }),
       countDocuments(PlanTrip, { status: "viewed" }),
@@ -78,14 +86,66 @@ const getCountDetails = async (req: Request, res: Response): Promise<void> => {
       countDocuments(UserDetails),
     ])
 
+    // Aggregate the data to get the count per month
+    const monthlyCountsPlanTrip = await PlanTrip.aggregate([
+      {
+        $project: {
+          month: { $month: "$createdAt" }, // Extract the month from the createdAt date
+          year: { $year: "$createdAt" }, // Extract the year from the createdAt date
+        },
+      },
+      {
+        $group: {
+          _id: { year: "$year", month: "$month" }, // Group by year and month
+          totalCount: { $sum: 1 }, // Count the number of requests in each group
+        },
+      },
+      {
+        $sort: { "_id.year": 1, "_id.month": 1 }, // Sort by year and month in ascending order
+      },
+    ])
+
+    const monthlyCountsRequestMails = await QuoteAndCustomize.aggregate([
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" }, // Extract year from createdAt field
+            month: { $month: "$createdAt" }, // Extract month from createdAt field
+          },
+          totalCount: { $sum: 1 }, // Count all requests for this year/month
+          quoteCount: {
+            $sum: { $cond: [{ $eq: ["$requestType", "quote"] }, 1, 0] },
+          }, // Count only "quote" type requests
+          customizeCount: {
+            $sum: { $cond: [{ $eq: ["$requestType", "customize"] }, 1, 0] },
+          }, // Count only "customize" type requests
+        },
+      },
+      {
+        $sort: { "_id.year": 1, "_id.month": 1 }, // Sort results by year and month
+      },
+    ])
+
     res.status(StatusCodes.OK).json({
       success: true,
       message: "Count details fetched successfully",
       data: {
-        trekkingCount,
-        tourCount,
-        wellnessCount,
-        blogCount,
+        trekking: {
+          total: trekkingCount,
+          active: activeTrekingCount,
+        },
+        tour: {
+          total: tourCount,
+          active: activeTourCount,
+        },
+        wellness: {
+          total: wellnessCount,
+          active: activeWellnessCount,
+        },
+        blog: {
+          total: blogCount,
+          active: activeBlogCount,
+        },
         planTripCount: {
           total: planTripCountTotal,
           pending: pendingPlanTripCount,
@@ -112,6 +172,8 @@ const getCountDetails = async (req: Request, res: Response): Promise<void> => {
           },
         },
         usersCount,
+        monthlyCountsPlanTrip,
+        monthlyCountsRequestMails,
       },
     })
   } catch (error) {
