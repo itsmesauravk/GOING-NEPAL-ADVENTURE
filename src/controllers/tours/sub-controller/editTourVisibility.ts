@@ -35,10 +35,14 @@ const editTourVisibility = async (
       .status(StatusCodes.OK)
       .json({ success: true, message: "Tour visibility updated" })
   } catch (error: any) {
+    let errorMessage = "Internal Server Error"
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: "Internal Server Error",
-      error: error.message,
+      error: errorMessage,
     })
   }
 }

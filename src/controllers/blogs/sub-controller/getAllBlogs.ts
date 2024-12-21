@@ -14,8 +14,17 @@ const getAllBlogs = async (req: Request, res: Response) => {
       queryObject.title = { $regex: search, $options: "i" } as any
     }
 
-    if (visibility && typeof visibility === "string") {
+    if (visibility === "all") {
+      // No additional filter admin want to see all treks
+    } else if (visibility === "isActive" || visibility === "isNewBlog") {
       queryObject[visibility] = "true" as string
+    } else if (visibility === "notActive") {
+      queryObject.isActiv = "false" as string
+    } else if (visibility === "notNewBlog") {
+      queryObject.isNewBlog = "false" as string
+    } else {
+      // default: only show activated treks
+      queryObject.isActive = "true" as string
     }
 
     let blog = Blog.find(queryObject)

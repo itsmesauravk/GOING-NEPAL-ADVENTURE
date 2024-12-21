@@ -4,6 +4,7 @@ const router = express.Router()
 import {
   bulkMailing,
   createRequest,
+  deleteQuoteAndCustomize,
   getPendingCount,
   getRequests,
   sendSingleMail,
@@ -47,5 +48,7 @@ router.post(
 router.post("/send-bulk-mail", uploader.fields(uploadFields), (req, res) => {
   bulkMailing(req as MulterRequest, res)
 })
+
+router.delete("/delete/:id", deleteQuoteAndCustomize)
 
 export default router
