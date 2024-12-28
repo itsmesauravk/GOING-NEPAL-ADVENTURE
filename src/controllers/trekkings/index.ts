@@ -5,6 +5,7 @@ import deleteTrek from "./sub-controller/deleteTrek.controller.js"
 import getTrekBySlug from "./sub-controller/getTrekBySlug.js"
 import editTrekVisibility from "./sub-controller/editTrekVisiblity.js"
 import getTrekLocation from "./sub-controller/getTrekLocation.controller.js"
+import editTrek from "./sub-controller/EditTrek.controller.js"
 
 export {
   addTrek,
@@ -14,4 +15,5 @@ export {
   deleteTrek,
   editTrekVisibility,
   getTrekLocation,
+  editTrek,
 }

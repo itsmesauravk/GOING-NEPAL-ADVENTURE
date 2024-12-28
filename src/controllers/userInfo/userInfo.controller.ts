@@ -46,6 +46,41 @@ const getUserDetails = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
+// add new client
+
+const addNewClientDetails = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const userDetails = new UserDetails(req.body)
+
+    const newUserDetails = await userDetails.save()
+
+    if (!newUserDetails) {
+      res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: "Unable to add Client Details, Please try again",
+      })
+      return
+    }
+
+    res.status(StatusCodes.CREATED).json({
+      success: true,
+      message: "Client Details Added",
+    })
+  } catch (error) {
+    let errorMessage = "Internal Server Error"
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: errorMessage,
+    })
+  }
+}
+
 // delete user info
 const deleteUserDetails = async (
   req: Request,
@@ -88,4 +123,4 @@ const deleteUserDetails = async (
   }
 }
 
-export { getUserDetails, deleteUserDetails }
+export { getUserDetails, addNewClientDetails, deleteUserDetails }

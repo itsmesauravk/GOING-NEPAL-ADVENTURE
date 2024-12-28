@@ -4,6 +4,7 @@ import getAllWellness from "./sub-controller/getAllWellness.js"
 import getWellnessBySLug from "./sub-controller/getWellnessBySlug.js"
 import editWellnessVisibility from "./sub-controller/editWellnessVisibility.js"
 import deleteWellness from "./sub-controller/deleteWellness.controller.js"
+import editWellness from "./sub-controller/editWellness.js"
 
 export {
   addWellness,
@@ -11,4 +12,5 @@ export {
   getWellnessBySLug,
   editWellnessVisibility,
   deleteWellness,
+  editWellness,
 }

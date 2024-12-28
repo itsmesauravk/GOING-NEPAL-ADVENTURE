@@ -14,6 +14,7 @@ app.use(
     origin: [
       "https://gna-admin-panel.vercel.app",
       "http://localhost:3000",
+      "http://localhost:3001",
       "https://going-nepal-adventure.vercel.app",
     ],
     credentials: true,

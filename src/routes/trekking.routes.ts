@@ -7,6 +7,7 @@ import {
   getTrekBySlug,
   editTrekVisibility,
   getTrekLocation,
+  editTrek,
 } from "../controllers/trekkings/index.js"
 import uploader from "../utils/multer.js"
 
@@ -94,6 +95,21 @@ router.get("/get-trek-location", async (req, res, next) => {
     next(error)
   }
 })
+
+// Secure - Routes
+
+//edit trek
+router.put(
+  "/edit-trek",
+  uploader.fields(uploadFields),
+  async (req, res, next) => {
+    try {
+      await editTrek(req as MulterRequest, res)
+    } catch (error) {
+      next(error)
+    }
+  }
+)
 
 // Export the router
 export default router

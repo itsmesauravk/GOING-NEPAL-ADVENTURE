@@ -6,6 +6,7 @@ import {
   editTourVisibility,
   deleteTour,
   getTourRegions,
+  editTour,
 } from "../controllers/tours/index.js"
 import uploader from "../utils/multer.js"
 
@@ -100,6 +101,21 @@ router.get("/get-tour-regions", async (req, res, next) => {
     next(error)
   }
 })
+
+// secure -Routes
+
+//edit
+router.put(
+  "/edit-tour",
+  uploader.fields(uploadFields),
+  async (req, res, next) => {
+    try {
+      await editTour(req as MulterRequest, res)
+    } catch (error) {
+      next(error)
+    }
+  }
+)
 
 // Export the router
 export default router

@@ -9,7 +9,7 @@ const deleteWellness = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const id = req.params.trekId
+    const id = req.params.wellnessId
     if (!id) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,

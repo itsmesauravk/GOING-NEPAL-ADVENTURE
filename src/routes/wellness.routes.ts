@@ -5,6 +5,7 @@ import {
   getWellnessBySLug,
   editWellnessVisibility,
   deleteWellness,
+  editWellness,
 } from "../controllers/wellness/index.js"
 import uploader from "../utils/multer.js"
 
@@ -65,15 +66,6 @@ router.get("/get-wellness/:slug", async (req, res, next) => {
   }
 })
 
-// // delete trek
-// router.delete("/delete-tour/:id", async (req, res, next) => {
-//   try {
-//     await deleteTrek(req as MulterRequest, res)
-//   } catch (error) {
-//     next(error)
-//   }
-// })
-
 // Update wellness visibility
 router.patch(
   "/edit-wellness-visibility/:wellnessId",
@@ -94,6 +86,21 @@ router.delete("/delete-wellness/:wellnessId", async (req, res, next) => {
     next(error)
   }
 })
+
+// secure -Routes
+
+//edit
+router.put(
+  "/edit-wellness",
+  uploader.fields(uploadFields),
+  async (req, res, next) => {
+    try {
+      await editWellness(req as MulterRequest, res)
+    } catch (error) {
+      next(error)
+    }
+  }
+)
 
 // Export the router
 export default router

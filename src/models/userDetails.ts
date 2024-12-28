@@ -24,6 +24,10 @@ const userDetailsSchema = new mongoose.Schema(
     userCountry: {
       type: String,
     },
+    // user company
+    userCompany: {
+      type: String,
+    },
   },
   {
     timestamps: true,
