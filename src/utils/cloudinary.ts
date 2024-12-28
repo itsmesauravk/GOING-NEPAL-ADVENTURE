@@ -65,7 +65,7 @@ const deleteImage = async (secureUrl: string) => {
       .join("/") // Join remaining components
       .replace(/\.[^/.]+$/, "") // Remove the file extension
 
-    console.log(`Extracted public_id: ${publicId}`)
+    // console.log(`Extracted public_id: ${publicId}`)
 
     const updatedString = publicId.replace(/%20/g, " ")
 

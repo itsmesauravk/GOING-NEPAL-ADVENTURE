@@ -5,6 +5,8 @@ import uploader from "../utils/multer.js"
 import {
   createActivity,
   deleteActivity,
+  editActivity,
+  editActivityVisibility,
   getActivities,
 } from "../controllers/activities/index.js"
 import getSingleActivity from "../controllers/activities/sub-controller/getSingleActivity.controller.js"
@@ -42,5 +44,16 @@ router.get("/get-activity-by-slug/:slug", async (req, res) => {
 router.delete("/delete-activity/:id", async (req, res) => {
   await deleteActivity(req, res)
 })
+
+router.patch("/edit-activity-visibility/:activityId", editActivityVisibility)
+
+//edit activity
+router.patch(
+  "/edit-activity",
+  uploader.fields(uploadFields),
+  async (req, res) => {
+    await editActivity(req as MulterRequest, res)
+  }
+)
 
 export default router

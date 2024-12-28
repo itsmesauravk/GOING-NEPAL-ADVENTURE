@@ -20,20 +20,20 @@ const editWellnessVisibility = async (
       })
     }
 
-    const tour = await Wellness.findByIdAndUpdate(wellnessId, req.body, {
+    const wellness = await Wellness.findByIdAndUpdate(wellnessId, req.body, {
       new: true,
     })
-    if (!tour) {
+    if (!wellness) {
       return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
-        message: "Tour not found",
-        error: `Tour not found with id: ${wellnessId}`,
+        message: "Wellness not found",
+        error: `wellness not found with id: ${wellnessId}`,
       })
     }
 
     return res
       .status(StatusCodes.OK)
-      .json({ success: true, message: "Tour visibility updated" })
+      .json({ success: true, message: "wellness visibility updated" })
   } catch (error: any) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
