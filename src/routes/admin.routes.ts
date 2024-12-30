@@ -1,13 +1,17 @@
 import express from "express"
 import {
   adminProfile,
+  editAdmin,
   getFullAdminProfile,
   loginAdmin,
   logoutAdmin,
   registerAdmin,
   updateAccessToken,
+  updatePassword,
   validateToken,
 } from "../controllers/admin/admin.controller.js"
+
+import auth from "../middlewares/auth.js"
 
 const router = express.Router()
 
@@ -37,5 +41,9 @@ router.post("/refresh-token", async (req, res) => {
 })
 
 router.get("/my-account/:id", getFullAdminProfile)
+
+router.patch("/update", editAdmin)
+
+router.patch("/update-password", auth, updatePassword)
 
 export default router

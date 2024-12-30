@@ -3,12 +3,18 @@ import { Request, Response } from "express"
 import { StatusCodes } from "http-status-codes"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import { AdminDocument } from "../../utils/types.js"
 
 //create admin
 
 interface DecodedToken {
   id: string
   email: string
+}
+
+// Define a custom interface extending the Express Request
+interface CustomRequest extends Request {
+  user?: AdminDocument // Replace 'any' with the actual type of user if known
 }
 
 const generateAccessAndRefreshTokens = async (admin: any) => {
@@ -68,29 +74,79 @@ const registerAdmin = async (req: Request, res: Response) => {
   }
 }
 
-const loginAdmin = async (req: Request, res: Response) => {
+const loginAdmin = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body
 
     if (!email || !password) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
+      res.status(StatusCodes.UNAUTHORIZED).json({
         success: false,
         message: "Please provide all required fields",
       })
+      return
     }
 
     const admin = await Admin.findOne({ email })
-    if (!admin)
-      return res
+    if (!admin) {
+      res
         .status(StatusCodes.UNAUTHORIZED)
         .json({ success: false, message: "Invalid Credientals" })
+      return
+    }
 
+    //check if account is locked
+    if (admin.failedLoginAttempts >= 5) {
+      const currentTime = new Date()
+      const lastFailedLoginAt = admin.lastFailedLoginAt
+      if (lastFailedLoginAt) {
+        const diff = Math.abs(
+          currentTime.getTime() - lastFailedLoginAt.getTime()
+        )
+        const diffInMinutes = Math.ceil(diff / (1000 * 60))
+        console.log("time difference : ", diffInMinutes)
+        if (diffInMinutes <= 10) {
+          res.status(StatusCodes.UNAUTHORIZED).json({
+            success: false,
+            message: `Your account has been locked temporary for 10 min. Please try again after 10 min.`,
+          })
+          return
+        } else {
+          admin.failedLoginAttempts = 0
+          await admin.save()
+        }
+      }
+    }
+
+    //validating password
     const validatePassword = await bcrypt.compare(password, admin.password)
 
-    if (!validatePassword)
-      return res
-        .status(StatusCodes.UNAUTHORIZED)
-        .json({ success: false, message: "Invalid Credientals" })
+    if (admin.failedLoginAttempts >= 5 && !validatePassword) {
+      res.status(StatusCodes.UNAUTHORIZED).json({
+        success: false,
+        message:
+          "Your account has been locked temporary for 10 min. Please try again after 10 min.",
+      })
+      return
+    }
+
+    if (!validatePassword) {
+      admin.failedLoginAttempts += 1
+      admin.lastFailedLoginAt = new Date()
+      await admin.save()
+      res.status(StatusCodes.UNAUTHORIZED).json({
+        success: false,
+        message: `Invalid Credential, Login Attempt left ${
+          5 - admin.failedLoginAttempts
+        } times.`,
+      })
+      return
+    }
+
+    admin.failedLoginAttempts = 0
+    admin.lastLoginAt = new Date()
+    admin.lastLoginIP = req.ip || "unknown"
+    admin.loginHistory.push({ ip: admin.lastLoginIP, timestamp: new Date() })
+    await admin.save()
 
     const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
       admin
@@ -102,10 +158,14 @@ const loginAdmin = async (req: Request, res: Response) => {
       accessToken,
       refreshToken,
     })
-  } catch (error: any) {
+  } catch (error) {
+    let errorMessage = "Internal Server Error"
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: error.message || "Internal server error",
+      message: errorMessage || "Internal server error",
     })
   }
 }
@@ -308,6 +368,139 @@ const getFullAdminProfile = async (
   }
 }
 
+const editAdmin = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Extract token
+    const token =
+      req.cookies?.token || req.header("Authorization")?.split(" ")[1]
+    if (!token) {
+      res.status(StatusCodes.UNAUTHORIZED).json({
+        success: false,
+        message: "Authentication token is missing",
+      })
+      return
+    }
+
+    // Verify token
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_ACCESS_TOKEN_SECRET as string
+    ) as DecodedToken
+
+    // Validate request body
+    const { fullName, phoneNumber } = req.body
+
+    if (!fullName || !phoneNumber) {
+      res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: "Please provide all required fields",
+      })
+
+      return
+    }
+
+    // Check if admin exists
+    const existingAdmin = await Admin.findById(decoded.id)
+    if (!existingAdmin) {
+      res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: "Admin not found",
+      })
+      return
+    }
+
+    // Update fields
+    const updatedAdmin = await Admin.findByIdAndUpdate(
+      decoded.id,
+      {
+        $set: { fullName: fullName, phoneNumber: phoneNumber },
+      },
+      { new: true }
+    )
+
+    if (!updatedAdmin) {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: "Unable to update admin",
+      })
+      return
+    }
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: "Admin updated successfully",
+      data: updatedAdmin,
+    })
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Internal Server Error"
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: errorMessage,
+    })
+  }
+}
+
+const updatePassword = async (
+  req: CustomRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const token =
+      req.cookies.accessToken || req.header("Authorization")?.split(" ")[1]
+    const { oldPassword, newPassword } = req.body
+
+    // Validate request body
+    if (!oldPassword || !newPassword) {
+      res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: "Please provide all required fields",
+      })
+    }
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_ACCESS_TOKEN_SECRET as string
+    ) as DecodedToken
+
+    // Find admin
+    const admin = await Admin.findById(decoded.id)
+    if (!admin) {
+      res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: "Admin not found",
+      })
+      return
+    }
+
+    // Validate old password
+    const validatePassword = await bcrypt.compare(oldPassword, admin.password)
+    if (!validatePassword) {
+      res.status(StatusCodes.UNAUTHORIZED).json({
+        success: false,
+        message: "Invalid old password",
+      })
+      return
+    }
+
+    // Update password
+    admin.password = newPassword
+    await admin.save()
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: "Password updated successfully",
+    })
+  } catch (error) {
+    let errorMessage = "Internal Server Error"
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: errorMessage,
+    })
+  }
+}
 export {
   registerAdmin,
   loginAdmin,
@@ -316,4 +509,6 @@ export {
   updateAccessToken,
   validateToken,
   getFullAdminProfile,
+  editAdmin,
+  updatePassword,
 }
