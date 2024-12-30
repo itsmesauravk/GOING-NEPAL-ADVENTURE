@@ -6,6 +6,7 @@ import uploader from "../utils/multer.js"
 import {
   addBlog,
   deleteBlog,
+  editBlog,
   editBlogVisibility,
   getAllBlogs,
   getSingleBlog,
@@ -49,5 +50,8 @@ router.delete("/delete-blog/:id", async (req, res, next) => {
 })
 
 router.patch("/edit-blog-visibility/:blogId", editBlogVisibility)
+
+//edit blogs
+router.put("/edit-blog", uploader.single("image"), editBlog)
 
 export default router
