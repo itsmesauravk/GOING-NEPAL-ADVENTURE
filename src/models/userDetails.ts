@@ -23,6 +23,7 @@ const userDetailsSchema = new mongoose.Schema(
     // user country
     userCountry: {
       type: String,
+      lowercase: true,
     },
     // user company
     userCompany: {

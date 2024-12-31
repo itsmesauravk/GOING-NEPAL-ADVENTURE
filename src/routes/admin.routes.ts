@@ -2,13 +2,16 @@ import express from "express"
 import {
   adminProfile,
   editAdmin,
+  forgotPassword,
   getFullAdminProfile,
   loginAdmin,
   logoutAdmin,
   registerAdmin,
+  resetPassword,
   updateAccessToken,
   updatePassword,
   validateToken,
+  verifyOtp,
 } from "../controllers/admin/admin.controller.js"
 
 import auth from "../middlewares/auth.js"
@@ -46,4 +49,14 @@ router.patch("/update", editAdmin)
 
 router.patch("/update-password", auth, updatePassword)
 
+//forgot password
+router.post("/forgot-password", forgotPassword)
+
+//verifyotp
+router.post("/verify", verifyOtp)
+
+//reset password
+router.post("/reset-password", resetPassword)
+
+// export router
 export default router

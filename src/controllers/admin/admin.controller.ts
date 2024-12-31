@@ -4,6 +4,8 @@ import { StatusCodes } from "http-status-codes"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { AdminDocument } from "../../utils/types.js"
+import { otpMailContent, otpSubject } from "../../utils/mailContent.js"
+import { sendSingleEmail } from "../../utils/nodemailer.js"
 
 //create admin
 
@@ -440,7 +442,7 @@ const editAdmin = async (req: Request, res: Response): Promise<void> => {
     })
   }
 }
-
+//update password from profile
 const updatePassword = async (
   req: CustomRequest,
   res: Response
@@ -501,6 +503,153 @@ const updatePassword = async (
     })
   }
 }
+
+// forgot password cases
+const forgotPassword = async (req: Request, res: Response): Promise<void> => {
+  const { email } = req.body
+  try {
+    const admin = await Admin.findOne({ email })
+    if (!admin) {
+      res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: "Account not found",
+      })
+      return
+    }
+
+    // Generate token
+    const verifyToken = jwt.sign(
+      { id: admin._id },
+      process.env.JWT_ACCESS_TOKEN_SECRET as string,
+      { expiresIn: "10m" }
+    )
+
+    //generate opt and send to email
+    const opt = Math.floor(1000 + Math.random() * 9000) // 4 digit random number
+    //send otp to email
+    const verificationLink = `${process.env.CLIENT_URL}/verify/t?${verifyToken}`
+    const mailContent = otpMailContent({
+      otp: opt.toString(),
+      verificationLink,
+    })
+    //send mail
+    sendSingleEmail(email, otpSubject, mailContent)
+
+    //save otp to admin
+    admin.oneTimePassword = Number(opt)
+    await admin.save()
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: "OTP sent to email",
+      verifyToken,
+    })
+  } catch (error) {
+    let errorMessage = "Internal Server Error"
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: errorMessage,
+    })
+  }
+}
+
+//verify otp
+const verifyOtp = async (req: Request, res: Response): Promise<void> => {
+  const { otp, token } = req.body
+  try {
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_ACCESS_TOKEN_SECRET as string
+    ) as DecodedToken
+
+    const admin = await Admin.findById(decoded.id)
+    if (!admin) {
+      res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: "Admin not found",
+      })
+      return
+    }
+
+    if (Number(otp) !== admin.oneTimePassword) {
+      res.status(StatusCodes.UNAUTHORIZED).json({
+        success: false,
+        message: "Invalid OTP",
+      })
+      return
+    }
+
+    //token for password reset
+    const resetToken = jwt.sign(
+      { id: admin._id },
+      process.env.JWT_ACCESS_TOKEN_SECRET as string,
+      { expiresIn: "10m" }
+    )
+
+    //remove otp from admin
+    admin.oneTimePassword = undefined
+    await admin.save()
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: "OTP verified successfully",
+      resetToken,
+    })
+  } catch (error) {
+    let errorMessage = "Internal Server Error"
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: errorMessage,
+    })
+  }
+}
+
+//reset password
+const resetPassword = async (req: Request, res: Response): Promise<void> => {
+  const { password, token } = req.body
+  try {
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_ACCESS_TOKEN_SECRET as string
+    ) as DecodedToken
+
+    const admin = await Admin.findById(decoded.id)
+    if (!admin) {
+      res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: "Unable to reset password",
+      })
+      return
+    }
+
+    admin.password = password
+
+    admin.failedLoginAttempts = 0
+
+    await admin.save()
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: "Password reset successfully",
+    })
+  } catch (error) {
+    let errorMessage = "Internal Server Error"
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: errorMessage,
+    })
+  }
+}
+
 export {
   registerAdmin,
   loginAdmin,
@@ -511,4 +660,7 @@ export {
   getFullAdminProfile,
   editAdmin,
   updatePassword,
+  forgotPassword,
+  verifyOtp,
+  resetPassword,
 }
