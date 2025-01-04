@@ -28,8 +28,12 @@ const generateAccessAndRefreshTokens = async (admin: any) => {
     await admin.save()
 
     return { accessToken, refreshToken }
-  } catch (error: any) {
-    throw new Error(error.message)
+  } catch (error) {
+    let errorMessage = "Internal Server Error"
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
+    throw new Error(errorMessage)
   }
 }
 
@@ -68,10 +72,14 @@ const registerAdmin = async (req: Request, res: Response) => {
       message: "Admin registered successfully",
       data: registredAdmin,
     })
-  } catch (error: any) {
+  } catch (error) {
+    let errorMessage = "Internal Server Error"
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: error.message || "Internal server error",
+      message: errorMessage,
     })
   }
 }
@@ -210,10 +218,14 @@ const adminProfile = async (req: Request, res: Response) => {
       success: true,
       data: admin,
     })
-  } catch (error: any) {
+  } catch (error) {
+    let errorMessage = "Internal Server Error"
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: error.message || "Internal server error",
+      message: errorMessage,
     })
   }
 }
@@ -236,10 +248,14 @@ const logoutAdmin = async (req: Request, res: Response) => {
       success: true,
       message: "Admin logged out successfully",
     })
-  } catch (error: any) {
+  } catch (error) {
+    let errorMessage = "Internal Server Error"
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: error.message || "Internal server error",
+      message: errorMessage,
     })
   }
 }
@@ -289,10 +305,14 @@ const updateAccessToken = async (req: Request, res: Response) => {
     })
 
     //
-  } catch (error: any) {
+  } catch (error) {
+    let errorMessage = "Internal Server Error"
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: error.message || "Internal server error",
+      message: errorMessage,
     })
   }
 }
@@ -327,10 +347,14 @@ const validateToken = async (req: Request, res: Response) => {
       success: true,
       message: "Token is valid",
     })
-  } catch (error: any) {
-    res.status(StatusCodes.UNAUTHORIZED).json({
+  } catch (error) {
+    let errorMessage = "Internal Server Error"
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: error.message || "Invalid or expired token",
+      message: errorMessage,
     })
   }
 }
@@ -362,10 +386,14 @@ const getFullAdminProfile = async (
       success: true,
       data: admin,
     })
-  } catch (error: any) {
+  } catch (error) {
+    let errorMessage = "Internal Server Error"
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: error.message || "Internal server error",
+      message: errorMessage,
     })
   }
 }
