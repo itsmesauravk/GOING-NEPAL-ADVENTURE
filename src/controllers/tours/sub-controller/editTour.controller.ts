@@ -30,8 +30,8 @@ interface EditTourRequest extends Request {
     minDays?: number
     maxDays?: number
     location?: string
-    groupSizeMin?: number
-    groupSizeMax?: number
+    minGroupSize?: number
+    maxGroupSize?: number
     startingPoint?: string
     endingPoint?: string
     accommodation?: string
@@ -161,21 +161,22 @@ const editTour = async (
     }
 
     // Handle groupSize object structure
-    if (updateData.groupSizeMin || updateData.groupSizeMax) {
+    if (updateData.minGroupSize || updateData.maxGroupSize) {
       updateFields.groupSize = {
-        min: updateData.groupSizeMin || (existingTour.groupSize?.min ?? 0),
-        max: updateData.groupSizeMax || (existingTour.groupSize?.max ?? 0),
+        min: updateData.minGroupSize || (existingTour.groupSize?.min ?? 0),
+        max: updateData.maxGroupSize || (existingTour.groupSize?.max ?? 0),
       }
     }
 
     // Handle trip type update
     if (tripType) {
       const parsedTripType = JSON.parse(tripType)
-      updateFields.tripType = parsedTripType.title
-      updateFields.tripTypeId = parsedTripType.id
 
-      // If trip type changed, update tour counts
-      if (parsedTripType.id !== existingTour.tripTypeId) {
+      updateFields.tripType = parsedTripType.title
+      updateFields.tripTypeId = parsedTripType._id
+
+      // If trip type changed, updat€e tour counts
+      if (parsedTripType._id !== existingTour.tripTypeId) {
         // Update old trip type count
         const oldTotalTours = await Tour.countDocuments({
           tripTypeId: existingTour.tripTypeId,
@@ -188,7 +189,7 @@ const editTour = async (
 
         // Update new trip type count
         const newTotalTours = await Tour.countDocuments({
-          tripTypeId: parsedTripType.id,
+          tripTypeId: parsedTripType._id,
         })
         await TripsAndTours.findByIdAndUpdate(
           parsedTripType.id,
@@ -294,7 +295,6 @@ const editTour = async (
       data: updatedTour,
     })
   } catch (error) {
-    console.error("Error in editTour:", error)
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: "Failed to update tour",
