@@ -19,7 +19,7 @@ const getAllBlogs = async (req: Request, res: Response) => {
     } else if (visibility === "isActive" || visibility === "isNewBlog") {
       queryObject[visibility] = "true" as string
     } else if (visibility === "notActive") {
-      queryObject.isActiv = "false" as string
+      queryObject.isActive = "false" as string
     } else if (visibility === "notNewBlog") {
       queryObject.isNewBlog = "false" as string
     } else {
