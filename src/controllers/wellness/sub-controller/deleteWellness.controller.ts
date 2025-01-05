@@ -42,12 +42,11 @@ const deleteWellness = async (
       success: true,
       message: "Wellness deleted Successfully",
     })
-  } catch (error: any) {
-    console.log(error)
+  } catch (error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: "Internal Server Error",
-      error: error.message,
+      message: "Internal server error",
+      error: error instanceof Error ? error.message : "Unknown error occurred",
     })
   }
 }

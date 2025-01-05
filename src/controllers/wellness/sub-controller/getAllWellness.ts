@@ -1,7 +1,18 @@
 import { Request, Response } from "express"
 import Wellness from "../../../models/wellness.model.js"
 import { StatusCodes } from "http-status-codes"
-import { QueryObjectType } from "../../../utils/types.js"
+
+interface QueryObjectType {
+  country?: string
+  updatedAt?: string
+  status?: string
+  difficulty?: string
+  sort?: string
+  visibility?: "isFeatured" | "isPopular" | "isNewItem" | "isRecommended"
+  [key: string]: string | undefined | { $ne: string } | object
+  _id?: { $ne: string }
+  name?: { $regex: string; $options: string }
+}
 
 // Getting all wellness with all the filtration, sorting and pagination
 const getAllWellness = async (
@@ -17,8 +28,8 @@ const getAllWellness = async (
       queryObject.country = country as string
     }
 
-    if (search) {
-      queryObject.name = { $regex: search, $options: "i" } as any
+    if (search && typeof search === "string") {
+      queryObject.name = { $regex: search, $options: "i" }
     }
 
     if (visibility === "all") {

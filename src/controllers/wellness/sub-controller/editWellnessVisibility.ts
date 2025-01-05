@@ -34,11 +34,11 @@ const editWellnessVisibility = async (
     return res
       .status(StatusCodes.OK)
       .json({ success: true, message: "wellness visibility updated" })
-  } catch (error: any) {
+  } catch (error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: "Internal Server Error",
-      error: error.message,
+      message: "Internal server error",
+      error: error instanceof Error ? error.message : "Unknown error occurred",
     })
   }
 }

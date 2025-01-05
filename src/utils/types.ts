@@ -8,6 +8,7 @@ export interface QueryObjectType {
   visibility?: "isFeatured" | "isPopular" | "isNewItem" | "isRecommended"
   [key: string]: string | undefined | { $ne: string } | object
   _id?: { $ne: string }
+  // name?: { $regex: string; $options: string };
 }
 
 export interface BlogQueryObjectType {

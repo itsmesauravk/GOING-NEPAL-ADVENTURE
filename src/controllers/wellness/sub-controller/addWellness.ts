@@ -191,8 +191,7 @@ const addWellness = async (
       message: "Wellness added successfully",
       data: savedTour,
     })
-  } catch (error: any) {
-    console.error("Error in addWellness:", error)
+  } catch (error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: "Internal server error",

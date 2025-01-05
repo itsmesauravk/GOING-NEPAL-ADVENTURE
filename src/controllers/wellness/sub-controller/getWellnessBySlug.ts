@@ -32,10 +32,10 @@ const getWellnessBySLug = async (
       data: wellness,
     })
   } catch (error) {
-    console.log(error)
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: "Internal Server Error",
+      message: "Internal server error",
+      error: error instanceof Error ? error.message : "Unknown error occurred",
     })
   }
 }
