@@ -14,9 +14,11 @@ const getSingleRequest = async (req: Request, res: Response) => {
     await request.updateOne({ status: "viewed" })
 
     res.status(StatusCodes.OK).json({ success: true, data: request })
-  } catch (error: any) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: error.message,
+  } catch (error) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: "Internal server error",
+      error: error instanceof Error ? error.message : "Unknown error occurred",
     })
   }
 }

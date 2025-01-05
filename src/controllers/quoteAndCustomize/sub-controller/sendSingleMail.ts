@@ -17,6 +17,26 @@ const sendSingleMail = async (req: MulterRequest, res: Response) => {
 
     const reqId = req.params.id
 
+
+    const updateRequest = await QuoteAndCustomize.findById(reqId)
+
+    if (!updateRequest) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ success: false, message: "Request not found" })
+    }
+
+    updateRequest.status = "pending"
+
+    await updateRequest.save()
+
+
+
+    const test = false
+    if(!test){
+      return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: "Test mode is disabled" })
+    }
+
     // Validate inputs
     if (!recipient || !subject || !message || !reqId) {
       return res
@@ -82,24 +102,27 @@ const sendSingleMail = async (req: MulterRequest, res: Response) => {
       `
     sendSingleEmail(recipient, subject, mailContent)
 
-    await QuoteAndCustomize.findOneAndUpdate(
-      { _id: reqId },
-      {
-        $set: { status: "mailed" },
-      },
-      { new: true }
-    )
+    // await QuoteAndCustomize.findOneAndUpdate(
+    //   { _id: reqId },
+    //   {
+    //     $set: { status: "mailed" },
+    //   },
+    //   { new: true }
+    // )
+
+    
 
     res.status(StatusCodes.OK).json({
       success: true,
       message: "Email sent successfully",
       attachmentCount: uploadedFiles.length,
+      updateRequest,
     })
   } catch (error) {
-    console.error(error)
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: "Failed to send email",
+      message: "Internal server error",
+      error: error instanceof Error ? error.message : "Unknown error occurred",
     })
   }
 }
