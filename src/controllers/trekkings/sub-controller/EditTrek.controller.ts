@@ -20,6 +20,7 @@ interface EditTrekRequest extends Request {
     trekId: string
     name?: string
     price?: number
+    discount?: number
     country?: string
     minDays?: number
     maxDays?: number
@@ -141,8 +142,12 @@ const editTrek = async (req: EditTrekRequest, res: Response): Promise<void> => {
     if (updateData.name) {
       updateFields.slug = slug(updateData.name)
     }
+
     if (updateData.accommodation) {
       updateFields.accommodation = JSON.parse(updateData.accommodation)
+    }
+    if (updateData.discount !== undefined) {
+      updateFields.discount = Number(updateData.discount)
     }
     if (updateData.bestSeason) {
       updateFields.bestSeason = JSON.parse(updateData.bestSeason)

@@ -23,6 +23,7 @@ const addTrek = async (
     const {
       name,
       price,
+      discount,
       country,
       minDays,
       maxDays,
@@ -41,6 +42,7 @@ const addTrek = async (
       servicesCostIncludes,
       servicesCostExcludes,
       packingList,
+      video,
       faq,
       note,
     } = req.body
@@ -48,7 +50,6 @@ const addTrek = async (
     // const { thumbnail, images, video } = req.files
     const thumbnail = req.files?.thumbnail
     const images = req.files?.images
-    const video = req.files?.video
     const trekPdf = req.files?.trekPdf
 
     // Validate required fields
@@ -56,6 +57,7 @@ const addTrek = async (
     if (
       !name ||
       !price ||
+      !discount ||
       !country ||
       !minDays ||
       !maxDays ||
@@ -145,15 +147,6 @@ const addTrek = async (
       }
     }
 
-    // Upload video
-    let uploadedVideo: string | undefined
-    if (video && video.length > 0) {
-      const videoUpload = await uploadVideo(video[0].path, "trekking/videos")
-      if (videoUpload) {
-        uploadedVideo = videoUpload.secure_url
-      }
-    }
-
     //slug
     const nameSlug = slug(name)
 
@@ -162,6 +155,7 @@ const addTrek = async (
       name,
       slug: nameSlug,
       price,
+      discount,
       country,
       days: { min: minDays, max: maxDays },
       location,
@@ -186,7 +180,7 @@ const addTrek = async (
       },
       faq: JSON.parse(faq) || [],
       images: uploadedImages,
-      video: uploadedVideo,
+      video,
       note,
       trekPdf: uploadedTrekPdf,
     })

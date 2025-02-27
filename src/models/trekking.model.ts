@@ -72,7 +72,8 @@ const trekkingSchema = new mongoose.Schema(
     name: { type: String, required: true },
     slug: { type: String, unique: true, default: "" },
     price: { type: Number, required: true },
-    thumbnail: { type: String }, // URL or path to the image
+    discount: { type: Number, default: 0 },
+    thumbnail: { type: String },
     country: {
       type: String,
       required: true,

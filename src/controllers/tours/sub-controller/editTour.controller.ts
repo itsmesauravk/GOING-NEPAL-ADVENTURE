@@ -20,6 +20,7 @@ interface EditTourRequest extends Request {
     tourId: string
     name?: string
     price?: number
+    discount?: number
     country?: string
     tripType?: string
     tourLanguage?: string
@@ -150,6 +151,10 @@ const editTour = async (
     // Update slug if name changes
     if (updateData.name) {
       updateFields.slug = slug(updateData.name)
+    }
+
+    if (updateData.discount !== undefined) {
+      updateFields.discount = Number(updateData.discount)
     }
 
     // Handle days object structure
