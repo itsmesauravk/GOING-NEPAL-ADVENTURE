@@ -1,7 +1,4 @@
-import mongoose, {
-  CallbackWithoutResultAndOptionalError,
-  Model,
-} from "mongoose"
+import mongoose, { CallbackWithoutResultAndOptionalError } from "mongoose"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { AdminTypes, AdminDocument } from "../utils/types"
@@ -111,24 +108,25 @@ adminSchema.pre(
   }
 )
 
-// Generate JWT token
-adminSchema.methods.generateAccessToken = function (this: any): string {
-  const payload = {
-    id: this._id,
-    email: this.email,
-  }
-  return jwt.sign(payload, process.env.JWT_ACCESS_TOKEN_SECRET as string, {
-    expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN as string,
-  })
-}
+// // Generate JWT token
+// adminSchema.methods.generateAccessToken = function (this: any): string {
+//   const payload = {
+//     id: this._id,
+//     email: this.email,
+//   }
+//   return jwt.sign(payload, process.env.JWT_ACCESS_TOKEN_SECRET as string, {
+//     expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN as string,
+//   })
+// }
 
-// Generate refresh token
-adminSchema.methods.generateRefreshToken = function (this: any): string {
-  const payload = { id: this._id }
-  return jwt.sign(payload, process.env.JWT_REFRESH_TOKEN_SECRET as string, {
-    expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN as string,
-  })
-}
+// // Generate refresh token
+// adminSchema.methods.generateRefreshToken = function (this: any): string {
+//   const payload = { id: this._id }
+
+//   return jwt.sign(payload, process.env.JWT_REFRESH_TOKEN_SECRET as string, {
+//     expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN as string,
+//   })
+// }
 
 // Export Admin model
 const Admin = mongoose.model("Admin", adminSchema)

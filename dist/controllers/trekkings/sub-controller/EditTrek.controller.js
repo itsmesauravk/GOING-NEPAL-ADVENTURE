@@ -73,6 +73,9 @@ const editTrek = async (req, res) => {
         if (updateData.accommodation) {
             updateFields.accommodation = JSON.parse(updateData.accommodation);
         }
+        if (updateData.discount !== undefined) {
+            updateFields.discount = Number(updateData.discount);
+        }
         if (updateData.bestSeason) {
             updateFields.bestSeason = JSON.parse(updateData.bestSeason);
         }

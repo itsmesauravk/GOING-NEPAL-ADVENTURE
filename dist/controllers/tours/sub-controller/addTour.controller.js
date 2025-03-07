@@ -6,7 +6,7 @@ import TripsAndTours from "../../../models/tripsAndTours.model.js";
 const addTour = async (req, res) => {
     try {
         // console.log(req.body)
-        const { name, price, country, tripType, tourLanguage, maxAltitude, suitableAge, arrivalLocation, departureLocation, minDays, maxDays, location, groupSizeMin, groupSizeMax, startingPoint, endingPoint, accommodation, thingsToKnow, meal, bestSeason, overview, highlights, itinerary, servicesCostIncludes, servicesCostExcludes, faq, note, } = req.body;
+        const { name, price, country, discount, tripType, tourLanguage, maxAltitude, suitableAge, arrivalLocation, departureLocation, minDays, maxDays, location, groupSizeMin, groupSizeMax, startingPoint, endingPoint, accommodation, thingsToKnow, meal, bestSeason, overview, highlights, itinerary, servicesCostIncludes, servicesCostExcludes, faq, note, } = req.body;
         // const { thumbnail, images, video } = req.files
         const thumbnail = req.files?.thumbnail;
         const images = req.files?.images;
@@ -98,6 +98,7 @@ const addTour = async (req, res) => {
             name,
             slug: nameSlug,
             price,
+            discount,
             country,
             tripType: JSON.parse(tripType).title,
             tripTypeId: JSON.parse(tripType).id,

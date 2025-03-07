@@ -19,21 +19,55 @@ interface CustomRequest extends Request {
   user?: AdminDocument // Replace 'any' with the actual type of user if known
 }
 
+// const generateAccessAndRefreshTokens = async (admin: any) => {
+//   try {
+//     const accessToken = await admin.generateAccessToken()
+//     const refreshToken = await admin.generateRefreshToken()
+
+//     admin.refreshToken = refreshToken
+//     await admin.save()
+
+//     return { accessToken, refreshToken }
+//   } catch (error) {
+//     let errorMessage = "Internal Server Error"
+//     if (error instanceof Error) {
+//       errorMessage = error.message
+//     }
+//     throw new Error(errorMessage)
+//   }
+// }
+
+// Generate access and refresh tokens
+
 const generateAccessAndRefreshTokens = async (admin: any) => {
   try {
-    const accessToken = await admin.generateAccessToken()
-    const refreshToken = await admin.generateRefreshToken()
+    const payload = { id: admin._id, email: admin.email }
 
+    const accessToken = jwt.sign(
+      payload,
+      process.env.JWT_ACCESS_TOKEN_SECRET as string,
+      {
+        expiresIn: Number(process.env.JWT_ACCESS_TOKEN_EXPIRES_IN) || "1h",
+      }
+    )
+
+    const refreshToken = jwt.sign(
+      { id: admin._id },
+      process.env.JWT_REFRESH_TOKEN_SECRET as string,
+      {
+        expiresIn: Number(process.env.JWT_REFRESH_TOKEN_EXPIRES_IN) || "7d",
+      }
+    )
+
+    // Save refresh token to database
     admin.refreshToken = refreshToken
     await admin.save()
 
     return { accessToken, refreshToken }
   } catch (error) {
-    let errorMessage = "Internal Server Error"
-    if (error instanceof Error) {
-      errorMessage = error.message
-    }
-    throw new Error(errorMessage)
+    throw new Error(
+      error instanceof Error ? error.message : "Internal Server Error"
+    )
   }
 }
 

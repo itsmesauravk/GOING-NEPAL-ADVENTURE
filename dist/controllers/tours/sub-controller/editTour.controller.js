@@ -72,6 +72,9 @@ const editTour = async (req, res) => {
         if (updateData.name) {
             updateFields.slug = slug(updateData.name);
         }
+        if (updateData.discount !== undefined) {
+            updateFields.discount = Number(updateData.discount);
+        }
         // Handle days object structure
         if (updateData.minDays || updateData.maxDays) {
             updateFields.days = {

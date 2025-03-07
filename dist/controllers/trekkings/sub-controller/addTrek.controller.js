@@ -1,20 +1,20 @@
 import Trekking from "../../../models/trekking.model.js";
-import { uploadFile, uploadVideo } from "../../../utils/cloudinary.js";
+import { uploadFile } from "../../../utils/cloudinary.js";
 import { StatusCodes } from "http-status-codes";
 import slug from "slug";
 const addTrek = async (req, res) => {
     try {
         // console.log(req.body)
-        const { name, price, country, minDays, maxDays, location, difficulty, groupSizeMin, groupSizeMax, startingPoint, endingPoint, accommodation, meal, bestSeason, overview, trekHighlights, itinerary, servicesCostIncludes, servicesCostExcludes, packingList, faq, note, } = req.body;
+        const { name, price, discount, country, minDays, maxDays, location, difficulty, groupSizeMin, groupSizeMax, startingPoint, endingPoint, accommodation, meal, bestSeason, overview, trekHighlights, itinerary, servicesCostIncludes, servicesCostExcludes, packingList, video, faq, note, } = req.body;
         // const { thumbnail, images, video } = req.files
         const thumbnail = req.files?.thumbnail;
         const images = req.files?.images;
-        const video = req.files?.video;
         const trekPdf = req.files?.trekPdf;
         // Validate required fields
         // console.log(req.body)
         if (!name ||
             !price ||
+            !discount ||
             !country ||
             !minDays ||
             !maxDays ||
@@ -92,14 +92,6 @@ const addTrek = async (req, res) => {
                 uploadedTrekPdf = trekPdfUpload.secure_url;
             }
         }
-        // Upload video
-        let uploadedVideo;
-        if (video && video.length > 0) {
-            const videoUpload = await uploadVideo(video[0].path, "trekking/videos");
-            if (videoUpload) {
-                uploadedVideo = videoUpload.secure_url;
-            }
-        }
         //slug
         const nameSlug = slug(name);
         // Create new trek
@@ -107,6 +99,7 @@ const addTrek = async (req, res) => {
             name,
             slug: nameSlug,
             price,
+            discount,
             country,
             days: { min: minDays, max: maxDays },
             location,
@@ -131,7 +124,7 @@ const addTrek = async (req, res) => {
             },
             faq: JSON.parse(faq) || [],
             images: uploadedImages,
-            video: uploadedVideo,
+            video,
             note,
             trekPdf: uploadedTrekPdf,
         });
