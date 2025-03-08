@@ -10,8 +10,8 @@ dotenv.config();
 app.use(cors({
     origin: [
         "https://gna-admin-panel.vercel.app",
-        // "http://localhost:3000",
-        // "http://localhost:3001",
+        "http://localhost:3000",
+        "http://localhost:3001",
         "https://www.goingnepaladventure.com",
     ],
     credentials: true,
