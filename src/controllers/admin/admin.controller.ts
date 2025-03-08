@@ -356,6 +356,8 @@ const validateToken = async (req: Request, res: Response) => {
     const token =
       req.cookies.token || req.header("Authorization")?.split(" ")[1]
 
+    console.log("token", token) 
+
     if (!token) {
       return res.status(StatusCodes.UNAUTHORIZED).json({
         success: false,

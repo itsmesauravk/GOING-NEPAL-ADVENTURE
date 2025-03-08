@@ -12,7 +12,7 @@ app.use(cors({
         "https://gna-admin-panel.vercel.app",
         "http://localhost:3000",
         "http://localhost:3001",
-        "https://going-nepal-adventure.vercel.app",
+        "https://goingnepaladventure.com",
     ],
     credentials: true,
 }));
