@@ -124,16 +124,18 @@ const loginAdmin = async (req, res) => {
             });
             return;
         }
-        if (!validatePassword) {
-            admin.failedLoginAttempts += 1;
-            admin.lastFailedLoginAt = new Date();
-            await admin.save();
-            res.status(StatusCodes.UNAUTHORIZED).json({
-                success: false,
-                message: `Invalid Credential, Login Attempt left ${5 - admin.failedLoginAttempts} times.`,
-            });
-            return;
-        }
+        // if (!validatePassword) {
+        //   admin.failedLoginAttempts += 1
+        //   admin.lastFailedLoginAt = new Date()
+        //   await admin.save()
+        //   res.status(StatusCodes.UNAUTHORIZED).json({
+        //     success: false,
+        //     message: `Invalid Credential, Login Attempt left ${
+        //       5 - admin.failedLoginAttempts
+        //     } times.`,
+        //   })
+        //   return
+        // }
         admin.failedLoginAttempts = 0;
         admin.lastLoginAt = new Date();
         admin.lastLoginIP = req.ip || "unknown";

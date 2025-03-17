@@ -173,18 +173,18 @@ const loginAdmin = async (req: Request, res: Response): Promise<void> => {
       return
     }
 
-    if (!validatePassword) {
-      admin.failedLoginAttempts += 1
-      admin.lastFailedLoginAt = new Date()
-      await admin.save()
-      res.status(StatusCodes.UNAUTHORIZED).json({
-        success: false,
-        message: `Invalid Credential, Login Attempt left ${
-          5 - admin.failedLoginAttempts
-        } times.`,
-      })
-      return
-    }
+    // if (!validatePassword) {
+    //   admin.failedLoginAttempts += 1
+    //   admin.lastFailedLoginAt = new Date()
+    //   await admin.save()
+    //   res.status(StatusCodes.UNAUTHORIZED).json({
+    //     success: false,
+    //     message: `Invalid Credential, Login Attempt left ${
+    //       5 - admin.failedLoginAttempts
+    //     } times.`,
+    //   })
+    //   return
+    // }
 
     admin.failedLoginAttempts = 0
     admin.lastLoginAt = new Date()
@@ -356,7 +356,7 @@ const validateToken = async (req: Request, res: Response) => {
     const token =
       req.cookies.token || req.header("Authorization")?.split(" ")[1]
 
-    console.log("token", token) 
+    console.log("token", token)
 
     if (!token) {
       return res.status(StatusCodes.UNAUTHORIZED).json({
