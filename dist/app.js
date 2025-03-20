@@ -41,6 +41,8 @@ import useDetailsRoutes from "./routes/userDetails.routes.js";
 import quoteAndCustomize from "./routes/quoteAndCustomize.js";
 //admin
 import adminRouter from "./routes/admin.routes.js";
+//booking
+import { bookingRouter } from "./routes/booking.routes.js";
 //health
 app.use("/", Health);
 //trekking
@@ -65,6 +67,8 @@ app.use("/api/v1/users", useDetailsRoutes);
 app.use("/api/v1/quote-and-customize", quoteAndCustomize);
 //admin
 app.use("/api/v1/admin", adminRouter);
+//booking
+app.use("/api/v1/booking", bookingRouter);
 // default route
 app.get("/", (req, res) => {
     res.status(200).json({

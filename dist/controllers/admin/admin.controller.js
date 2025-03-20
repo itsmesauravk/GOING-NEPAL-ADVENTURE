@@ -276,8 +276,8 @@ const updateAccessToken = async (req, res) => {
 };
 const validateToken = async (req, res) => {
     try {
-        const token = req.cookies.token || req.header("Authorization")?.split(" ")[1];
-        console.log("token", token);
+        const token = req.cookies.token || req.headers?.authorization?.split(" ")[1];
+        // console.log("first", token)
         if (!token) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 success: false,

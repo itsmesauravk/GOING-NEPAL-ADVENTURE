@@ -10,7 +10,7 @@ var transporter = nodemailer.createTransport({
 const sendSingleEmail = (email, subject, content) => {
     try {
         let mailOptions = {
-            from: `${process.env.AUTH_EMAIL}`,
+            from: `Going Nepal Adventure <${process.env.AUTH_EMAIL}>`,
             to: email,
             subject: subject,
             html: content,
@@ -36,7 +36,7 @@ subject, // Email subject
 content) => {
     try {
         const mailOptions = {
-            from: process.env.AUTH_EMAIL,
+            from: `Going Nepal Adventure <${process.env.AUTH_EMAIL}>`,
             to: emails.join(","), // Convert array to comma-separated string
             subject: subject,
             html: content, // Use HTML content for better email formatting
