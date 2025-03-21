@@ -8,6 +8,7 @@ import PlanTrip from "../../models/planTrip.model.js"
 import Activity from "../../models/activities.model.js"
 import QuoteAndCustomize from "../../models/quoteAndCustomize.js"
 import UserDetails from "../../models/userDetails.js"
+import { Booking } from "../../models/booking.model.js"
 
 import { Model } from "mongoose"
 
@@ -41,6 +42,8 @@ const getCountDetails = async (req: Request, res: Response): Promise<void> => {
       customizeViewedCount,
       customizeMailedCount,
       usersCount,
+      bookingCount,
+      pendingBookingCount,
     ] = await Promise.all([
       countDocuments(Trekking),
       countDocuments(Trekking, { isActivated: true }),
@@ -84,6 +87,8 @@ const getCountDetails = async (req: Request, res: Response): Promise<void> => {
         status: "mailed",
       }),
       countDocuments(UserDetails),
+      countDocuments(Booking),
+      countDocuments(Booking, { status: "pending" }),
     ])
 
     // Aggregate the data to get the count per month
@@ -174,6 +179,10 @@ const getCountDetails = async (req: Request, res: Response): Promise<void> => {
         usersCount,
         monthlyCountsPlanTrip,
         monthlyCountsRequestMails,
+        booking: {
+          total: bookingCount,
+          pending: pendingBookingCount,
+        },
       },
     })
   } catch (error) {
