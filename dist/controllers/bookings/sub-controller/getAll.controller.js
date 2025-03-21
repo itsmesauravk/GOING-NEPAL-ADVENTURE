@@ -2,31 +2,32 @@ import { Booking } from "../../../models/booking.model.js";
 import { StatusCodes } from "http-status-codes";
 const getBooking = async (req, res) => {
     try {
-        const { page = 1, limit = 10, sort, adventureType } = req.query;
+        const { page = 1, limit = 10, sort, adventureTypeSort } = req.query;
+        // console.log(req.query)
         // Pagination
         const pageNumber = parseInt(page, 10) || 1;
         const limitNumber = parseInt(limit, 10) || 10;
         const skip = (pageNumber - 1) * limitNumber;
         // Sorting logic
-        let sortOption = { createdAt: -1 }; // Default: Newest First
+        let sortOption = { status: 1, createdAt: -1 }; // Default:pending & Newest First
         if (sort === "oldest")
             sortOption = { createdAt: 1 };
-        else if (sort === "nameAsc")
-            sortOption = { email: 1 };
-        else if (sort === "nameDesc")
-            sortOption = { email: -1 };
-        else if (sort === "priceAsc")
+        else if (sort === "fullName")
+            sortOption = { fullName: 1 };
+        else if (sort === "-fullName")
+            sortOption = { fullName: -1 };
+        else if (sort === "totalPrice")
             sortOption = { totalPrice: 1 };
-        else if (sort === "priceDesc")
+        else if (sort === "-totalPrice")
             sortOption = { totalPrice: -1 };
-        else if (sort === "bookingDateAsc")
+        else if (sort === "bookingDate")
             sortOption = { bookingDate: 1 };
-        else if (sort === "bookingDateDesc")
+        else if (sort === "-bookingDate")
             sortOption = { bookingDate: -1 };
         // Filtering by adventure type (if provided)
         const filter = {};
-        if (adventureType && adventureType !== "all") {
-            filter.adventureType = adventureType;
+        if (adventureTypeSort && adventureTypeSort !== "all") {
+            filter.adventureType = adventureTypeSort;
         }
         // Fetching bookings with applied filters, sorting, and pagination
         const bookings = await Booking.find(filter)
@@ -41,6 +42,7 @@ const getBooking = async (req, res) => {
                 success: false,
                 message: "No Bookings Found",
             });
+            return;
         }
         res.status(StatusCodes.OK).json({
             success: true,
