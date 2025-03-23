@@ -1,6 +1,5 @@
 import express from "express";
 import { adminProfile, editAdmin, forgotPassword, getFullAdminProfile, loginAdmin, logoutAdmin, registerAdmin, resetPassword, updateAccessToken, updatePassword, validateToken, verifyOtp, } from "../controllers/admin/admin.controller.js";
-import auth from "../middlewares/auth.js";
 const router = express.Router();
 //routes
 router.post("/admin-register", async (req, res) => {
@@ -23,7 +22,7 @@ router.post("/refresh-token", async (req, res) => {
 });
 router.get("/my-account/:id", getFullAdminProfile);
 router.patch("/update", editAdmin);
-router.patch("/update-password", auth, updatePassword);
+router.patch("/update-password", updatePassword);
 //forgot password
 router.post("/forgot-password", forgotPassword);
 //verifyotp

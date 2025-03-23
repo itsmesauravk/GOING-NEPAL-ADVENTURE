@@ -7,10 +7,11 @@ import PlanTrip from "../../models/planTrip.model.js";
 import Activity from "../../models/activities.model.js";
 import QuoteAndCustomize from "../../models/quoteAndCustomize.js";
 import UserDetails from "../../models/userDetails.js";
+import { Booking } from "../../models/booking.model.js";
 const countDocuments = async (model, filter = {}) => await model.countDocuments(filter);
 const getCountDetails = async (req, res) => {
     try {
-        const [trekkingCount, activeTrekingCount, tourCount, activeTourCount, wellnessCount, activeWellnessCount, blogCount, activeBlogCount, planTripCountTotal, pendingPlanTripCount, viewedPlanTripCount, mailedPlanTripCount, activityCountTotal, activityPopularCount, activityActiveCount, quoteCountTotal, quotePendingCount, quoteViewedCount, quoteMailedCount, customizeCountTotal, customizePendingCount, customizeViewedCount, customizeMailedCount, usersCount,] = await Promise.all([
+        const [trekkingCount, activeTrekingCount, tourCount, activeTourCount, wellnessCount, activeWellnessCount, blogCount, activeBlogCount, planTripCountTotal, pendingPlanTripCount, viewedPlanTripCount, mailedPlanTripCount, activityCountTotal, activityPopularCount, activityActiveCount, quoteCountTotal, quotePendingCount, quoteViewedCount, quoteMailedCount, customizeCountTotal, customizePendingCount, customizeViewedCount, customizeMailedCount, usersCount, bookingCount, pendingBookingCount,] = await Promise.all([
             countDocuments(Trekking),
             countDocuments(Trekking, { isActivated: true }),
             countDocuments(Tour),
@@ -53,6 +54,8 @@ const getCountDetails = async (req, res) => {
                 status: "mailed",
             }),
             countDocuments(UserDetails),
+            countDocuments(Booking),
+            countDocuments(Booking, { status: "pending" }),
         ]);
         // Aggregate the data to get the count per month
         const monthlyCountsPlanTrip = await PlanTrip.aggregate([
@@ -140,6 +143,10 @@ const getCountDetails = async (req, res) => {
                 usersCount,
                 monthlyCountsPlanTrip,
                 monthlyCountsRequestMails,
+                booking: {
+                    total: bookingCount,
+                    pending: pendingBookingCount,
+                },
             },
         });
     }
