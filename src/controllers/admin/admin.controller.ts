@@ -139,39 +139,39 @@ const loginAdmin = async (req: Request, res: Response): Promise<void> => {
     }
 
     //check if account is locked
-    if (admin.failedLoginAttempts >= 5) {
-      const currentTime = new Date()
-      const lastFailedLoginAt = admin.lastFailedLoginAt
-      if (lastFailedLoginAt) {
-        const diff = Math.abs(
-          currentTime.getTime() - lastFailedLoginAt.getTime()
-        )
-        const diffInMinutes = Math.ceil(diff / (1000 * 60))
-        console.log("time difference : ", diffInMinutes)
-        if (diffInMinutes <= 10) {
-          res.status(StatusCodes.UNAUTHORIZED).json({
-            success: false,
-            message: `Your account has been locked temporary for 10 min. Please try again after 10 min.`,
-          })
-          return
-        } else {
-          admin.failedLoginAttempts = 0
-          await admin.save()
-        }
-      }
-    }
+    // if (admin.failedLoginAttempts >= 5) {
+    //   const currentTime = new Date()
+    //   const lastFailedLoginAt = admin.lastFailedLoginAt
+    //   if (lastFailedLoginAt) {
+    //     const diff = Math.abs(
+    //       currentTime.getTime() - lastFailedLoginAt.getTime()
+    //     )
+    //     const diffInMinutes = Math.ceil(diff / (1000 * 60))
+    //     console.log("time difference : ", diffInMinutes)
+    //     if (diffInMinutes <= 10) {
+    //       res.status(StatusCodes.UNAUTHORIZED).json({
+    //         success: false,
+    //         message: `Your account has been locked temporary for 10 min. Please try again after 10 min.`,
+    //       })
+    //       return
+    //     } else {
+    //       admin.failedLoginAttempts = 0
+    //       await admin.save()
+    //     }
+    //   }
+    // }
 
     //validating password
     const validatePassword = await bcrypt.compare(password, admin.password)
 
-    if (admin.failedLoginAttempts >= 5 && !validatePassword) {
-      res.status(StatusCodes.UNAUTHORIZED).json({
-        success: false,
-        message:
-          "Your account has been locked temporary for 10 min. Please try again after 10 min.",
-      })
-      return
-    }
+    // if (admin.failedLoginAttempts >= 5 && !validatePassword) {
+    //   res.status(StatusCodes.UNAUTHORIZED).json({
+    //     success: false,
+    //     message:
+    //       "Your account has been locked temporary for 10 min. Please try again after 10 min.",
+    //   })
+    //   return
+    // }
 
     // if (!validatePassword) {
     //   admin.failedLoginAttempts += 1
@@ -186,6 +186,20 @@ const loginAdmin = async (req: Request, res: Response): Promise<void> => {
     //   return
     // }
 
+    if (!validatePassword) {
+      res.status(StatusCodes.UNAUTHORIZED).json({
+        success: false,
+        message: "Invalid Credientals",
+      })
+      return
+    }
+
+    const responseAdmin = {
+      _id: admin._id,
+      name: admin.fullName,
+      email: admin.email,
+    }
+
     admin.failedLoginAttempts = 0
     admin.lastLoginAt = new Date()
     admin.lastLoginIP = req.ip || "unknown"
@@ -199,8 +213,8 @@ const loginAdmin = async (req: Request, res: Response): Promise<void> => {
     res.status(StatusCodes.OK).json({
       success: true,
       message: "Admin logged in successfully",
-      accessToken,
-      refreshToken,
+      jwt: accessToken,
+      data: responseAdmin,
     })
   } catch (error) {
     let errorMessage = "Internal Server Error"
