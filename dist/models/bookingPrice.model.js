@@ -29,6 +29,14 @@ const bookingPriceSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    singleSupplementaryFourStar: {
+        type: Number,
+        default: 0,
+    },
+    singleSupplementaryFiveStar: {
+        type: Number,
+        default: 0,
+    },
     soloFourStar: {
         type: Number,
         required: true,

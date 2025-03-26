@@ -1,10 +1,15 @@
 import Trekking from "../../../models/trekking.model.js";
 import { StatusCodes } from "http-status-codes";
+import { BookingPrice } from "../../../models/bookingPrice.model.js";
 // Getting single treks
 const getTrekBySlug = async (req, res) => {
     try {
         const slug = req.params.slug;
         const trek = await Trekking.findOne({ slug });
+        const bookingDetails = await BookingPrice.findOne({
+            adventureType: "Trekking",
+            trekId: trek?._id,
+        });
         if (!trek) {
             return res.status(StatusCodes.NOT_FOUND).json({
                 success: false,
@@ -19,6 +24,7 @@ const getTrekBySlug = async (req, res) => {
             success: true,
             message: "Trek found",
             data: trek,
+            bookingDetails,
         });
     }
     catch (error) {

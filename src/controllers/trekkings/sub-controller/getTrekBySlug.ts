@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import Trekking from "../../../models/trekking.model.js"
 import { uploadFile } from "../../../utils/cloudinary.js"
 import { StatusCodes } from "http-status-codes"
+import { BookingPrice } from "../../../models/bookingPrice.model.js"
 
 // Getting single treks
 
@@ -13,6 +14,11 @@ const getTrekBySlug = async (
     const slug = req.params.slug
 
     const trek = await Trekking.findOne({ slug })
+
+    const bookingDetails = await BookingPrice.findOne({
+      adventureType: "Trekking",
+      trekId: trek?._id,
+    })
 
     if (!trek) {
       return res.status(StatusCodes.NOT_FOUND).json({
@@ -30,6 +36,7 @@ const getTrekBySlug = async (
       success: true,
       message: "Trek found",
       data: trek,
+      bookingDetails,
     })
   } catch (error) {
     console.log(error)

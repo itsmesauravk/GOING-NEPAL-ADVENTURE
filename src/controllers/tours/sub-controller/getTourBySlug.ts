@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import Tour from "../../../models/tour.model.js"
 import { uploadFile } from "../../../utils/cloudinary.js"
 import { StatusCodes } from "http-status-codes"
+import { BookingPrice } from "../../../models/bookingPrice.model.js"
 
 // Getting single tour by slug
 
@@ -20,6 +21,10 @@ const getTourBySlug = async (
         message: "No trek found",
       })
     }
+    const bookingDetails = await BookingPrice.findOne({
+      adventureType: "Tour",
+      tourId: tour?._id,
+    })
 
     if (tour) {
       tour.viewsCount += 1
@@ -30,6 +35,7 @@ const getTourBySlug = async (
       success: true,
       message: "Tour found",
       data: tour,
+      bookingDetails,
     })
   } catch (error) {
     console.log(error)

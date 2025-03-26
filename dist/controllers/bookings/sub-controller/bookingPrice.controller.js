@@ -2,12 +2,14 @@ import { BookingPrice } from "../../../models/bookingPrice.model.js";
 import { StatusCodes } from "http-status-codes";
 const addBookingPrice = async (req, res) => {
     try {
-        const { adventureType, adventureId, pricePerPerson, discount, soloFourStar, soloFiveStar, standardFourStar, standardFiveStar, } = req.body;
+        const { adventureType, adventureId, pricePerPerson, discount, soloFourStar, soloFiveStar, singleSupplementaryFourStar, singleSupplementaryFiveStar, standardFourStar, standardFiveStar, } = req.body;
         if (!adventureType ||
             !adventureId ||
             !pricePerPerson ||
             !soloFourStar ||
             !soloFiveStar ||
+            !singleSupplementaryFourStar ||
+            !singleSupplementaryFiveStar ||
             !standardFourStar ||
             !standardFiveStar) {
             res.status(StatusCodes.BAD_REQUEST).json({
@@ -25,6 +27,8 @@ const addBookingPrice = async (req, res) => {
             discount,
             soloFourStar,
             soloFiveStar,
+            singleSupplementaryFourStar,
+            singleSupplementaryFiveStar,
             standardFourStar,
             standardFiveStar,
         });
@@ -45,12 +49,14 @@ const addBookingPrice = async (req, res) => {
 };
 const updateBookingPrice = async (req, res) => {
     try {
-        const { adventureType, adventureId, pricePerPerson, discount, soloFourStar, soloFiveStar, standardFourStar, standardFiveStar, } = req.body;
+        const { adventureType, adventureId, pricePerPerson, discount, soloFourStar, soloFiveStar, singleSupplementaryFourStar, singleSupplementaryFiveStar, standardFourStar, standardFiveStar, } = req.body;
         if (!adventureType ||
             !adventureId ||
             !pricePerPerson ||
             !soloFourStar ||
             !soloFiveStar ||
+            !singleSupplementaryFourStar ||
+            !singleSupplementaryFiveStar ||
             !standardFourStar ||
             !standardFiveStar) {
             res.status(StatusCodes.BAD_REQUEST).json({
@@ -78,6 +84,8 @@ const updateBookingPrice = async (req, res) => {
             discount,
             soloFourStar,
             soloFiveStar,
+            singleSupplementaryFourStar,
+            singleSupplementaryFiveStar,
             standardFourStar,
             standardFiveStar,
         }, { new: true });
@@ -125,59 +133,6 @@ const deleteBookingPrice = async (req, res) => {
         }
     }
 };
-// const getSingleBookingPrice = async (
-//   req: Request,
-//   res: Response
-// ): Promise<void> => {
-//   try {
-//     const { adventureType, adventureId } = req.params
-//     console.log(req.params)
-//     if (!adventureType || !adventureId) {
-//       res.status(StatusCodes.BAD_REQUEST).json({
-//         message: "Please provide adventureType and adventureId",
-//       })
-//       return
-//     }
-//     // Define the query interface
-//     interface BookingPriceQuery {
-//       adventureType: string
-//       trekId?: string | null
-//       tourId?: string | null
-//       wellnessId?: string | null
-//       activityId?: string | null
-//     }
-//     // Initialize with base query
-//     const query: BookingPriceQuery = { adventureType }
-//     // Add the appropriate ID field based on adventure type
-//     if (adventureType === "Trekking") {
-//       query.trekId = adventureId
-//     } else if (adventureType === "Tour") {
-//       query.tourId = adventureId
-//     } else if (adventureType === "Wellness") {
-//       query.wellnessId = adventureId
-//     } else if (adventureType === "Activity") {
-//       query.activityId = adventureId
-//     }
-//     const bookingPrice = await BookingPrice.findOne(query)
-//     if (!bookingPrice) {
-//       res.status(StatusCodes.NOT_FOUND).json({
-//         message: "Booking price not found",
-//       })
-//       return
-//     }
-//     res.status(StatusCodes.OK).json({
-//       success: true,
-//       bookingPrice,
-//     })
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-//         success: false,
-//         message: error.message,
-//       })
-//     }
-//   }
-// }
 const getSingleBookingPrice = async (req, res) => {
     try {
         const { adventureId, adventureType } = req.params;

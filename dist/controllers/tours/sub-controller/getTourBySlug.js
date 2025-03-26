@@ -1,5 +1,6 @@
 import Tour from "../../../models/tour.model.js";
 import { StatusCodes } from "http-status-codes";
+import { BookingPrice } from "../../../models/bookingPrice.model.js";
 // Getting single tour by slug
 const getTourBySlug = async (req, res) => {
     try {
@@ -11,6 +12,10 @@ const getTourBySlug = async (req, res) => {
                 message: "No trek found",
             });
         }
+        const bookingDetails = await BookingPrice.findOne({
+            adventureType: "Tour",
+            tourId: tour?._id,
+        });
         if (tour) {
             tour.viewsCount += 1;
             await tour.save();
@@ -19,6 +24,7 @@ const getTourBySlug = async (req, res) => {
             success: true,
             message: "Tour found",
             data: tour,
+            bookingDetails,
         });
     }
     catch (error) {
