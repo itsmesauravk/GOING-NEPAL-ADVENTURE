@@ -26,7 +26,7 @@ const bookingPriceSchema = new mongoose.Schema(
     },
     pricePerPerson: {
       type: Number,
-      required: true,
+      default: 0,
     },
     discount: {
       type: Number,
@@ -43,19 +43,19 @@ const bookingPriceSchema = new mongoose.Schema(
 
     soloFourStar: {
       type: Number,
-      required: true,
+      default: 0,
     },
     soloFiveStar: {
       type: Number,
-      required: true,
+      default: 0,
     },
     standardFourStar: {
       type: Number,
-      required: true,
+      default: 0,
     },
     standardFiveStar: {
       type: Number,
-      required: true,
+      default: 0,
     },
   },
   {
