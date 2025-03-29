@@ -17,7 +17,6 @@ const sendSingleMail = async (req: MulterRequest, res: Response) => {
 
     const reqId = req.params.id
 
-
     const updateRequest = await QuoteAndCustomize.findById(reqId)
 
     if (!updateRequest) {
@@ -29,13 +28,6 @@ const sendSingleMail = async (req: MulterRequest, res: Response) => {
     updateRequest.status = "pending"
 
     await updateRequest.save()
-
-
-
-    const test = false
-    if(!test){
-      return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: "Test mode is disabled" })
-    }
 
     // Validate inputs
     if (!recipient || !subject || !message || !reqId) {
@@ -109,8 +101,6 @@ const sendSingleMail = async (req: MulterRequest, res: Response) => {
     //   },
     //   { new: true }
     // )
-
-    
 
     res.status(StatusCodes.OK).json({
       success: true,

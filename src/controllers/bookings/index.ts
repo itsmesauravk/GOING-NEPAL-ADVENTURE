@@ -8,6 +8,7 @@ import {
   deleteBookingPrice,
   getSingleBookingPrice,
 } from "./sub-controller/bookingPrice.controller.js"
+import sendBookingMail from "./sub-controller/bookingMailSend.controller.js"
 
 export {
   createBooking,
@@ -18,4 +19,5 @@ export {
   updateBookingPrice,
   deleteBookingPrice,
   getSingleBookingPrice,
+  sendBookingMail,
 }

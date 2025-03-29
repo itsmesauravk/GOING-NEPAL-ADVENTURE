@@ -7,9 +7,20 @@ import {
   deleteBookingPrice,
   getBooking,
   getSingleBookingPrice,
+  sendBookingMail,
   updateBookingPrice,
   viewSingle,
 } from "../controllers/bookings/index.js"
+
+import uploader from "../utils/multer.js"
+
+interface MulterRequest extends express.Request {
+  files: {
+    attachments: Express.Multer.File[]
+  }
+}
+
+const uploadFields = [{ name: "attachments", maxCount: 5 }]
 
 const bookingRouter = express.Router()
 
@@ -25,6 +36,13 @@ bookingRouter.delete("/delete-booking-price/:id", deleteBookingPrice)
 bookingRouter.get(
   "/get-single-booking-price/:adventureId/:adventureType",
   getSingleBookingPrice
+)
+bookingRouter.post(
+  "/send-booking-mail/:id",
+  uploader.fields(uploadFields),
+  (req, res) => {
+    sendBookingMail(req as MulterRequest, res)
+  }
 )
 
 export { bookingRouter }
