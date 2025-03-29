@@ -7,27 +7,17 @@ const addBookingPrice = async (req: Request, res: Response): Promise<void> => {
     const {
       adventureType,
       adventureId,
-      pricePerPerson,
-      discount,
+      solo,
       soloFourStar,
       soloFiveStar,
+      singleSupplementary,
       singleSupplementaryFourStar,
       singleSupplementaryFiveStar,
       standardFourStar,
       standardFiveStar,
     } = req.body
 
-    if (
-      !adventureType ||
-      !adventureId ||
-      !pricePerPerson ||
-      !soloFourStar ||
-      !soloFiveStar ||
-      !singleSupplementaryFourStar ||
-      !singleSupplementaryFiveStar ||
-      !standardFourStar ||
-      !standardFiveStar
-    ) {
+    if (!adventureType || !adventureId) {
       res.status(StatusCodes.BAD_REQUEST).json({
         message: "Please fill all the fields",
       })
@@ -40,8 +30,8 @@ const addBookingPrice = async (req: Request, res: Response): Promise<void> => {
       tourId: adventureType === "Tour" ? adventureId : null,
       wellnessId: adventureType === "Wellness" ? adventureId : null,
       activityId: adventureType === "Activity" ? adventureId : null,
-      pricePerPerson,
-      discount,
+      solo,
+      singleSupplementary,
       soloFourStar,
       soloFiveStar,
       singleSupplementaryFourStar,
@@ -74,27 +64,17 @@ const updateBookingPrice = async (
     const {
       adventureType,
       adventureId,
-      pricePerPerson,
-      discount,
+      solo,
       soloFourStar,
       soloFiveStar,
+      singleSupplementary,
       singleSupplementaryFourStar,
       singleSupplementaryFiveStar,
       standardFourStar,
       standardFiveStar,
     } = req.body
 
-    if (
-      !adventureType ||
-      !adventureId ||
-      !pricePerPerson ||
-      !soloFourStar ||
-      !soloFiveStar ||
-      !singleSupplementaryFourStar ||
-      !singleSupplementaryFiveStar ||
-      !standardFourStar ||
-      !standardFiveStar
-    ) {
+    if (!adventureType || !adventureId) {
       res.status(StatusCodes.BAD_REQUEST).json({
         message: "Please fill all the fields",
       })
@@ -127,8 +107,8 @@ const updateBookingPrice = async (
     const bookingPrice = await BookingPrice.findOneAndUpdate(
       query,
       {
-        pricePerPerson,
-        discount,
+        solo,
+        singleSupplementary,
         soloFourStar,
         soloFiveStar,
         singleSupplementaryFourStar,

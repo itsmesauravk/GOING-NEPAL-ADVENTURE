@@ -24,14 +24,11 @@ const bookingPriceSchema = new mongoose.Schema(
       ref: "Activity",
       default: null,
     },
-    pricePerPerson: {
+    singleSupplementary: {
       type: Number,
       default: 0,
     },
-    discount: {
-      type: Number,
-      default: 0,
-    },
+
     singleSupplementaryFourStar: {
       type: Number,
       default: 0,
@@ -40,7 +37,10 @@ const bookingPriceSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-
+    solo: {
+      type: Number,
+      default: 0,
+    },
     soloFourStar: {
       type: Number,
       default: 0,

@@ -2,16 +2,8 @@ import { BookingPrice } from "../../../models/bookingPrice.model.js";
 import { StatusCodes } from "http-status-codes";
 const addBookingPrice = async (req, res) => {
     try {
-        const { adventureType, adventureId, pricePerPerson, discount, soloFourStar, soloFiveStar, singleSupplementaryFourStar, singleSupplementaryFiveStar, standardFourStar, standardFiveStar, } = req.body;
-        if (!adventureType ||
-            !adventureId ||
-            !pricePerPerson ||
-            !soloFourStar ||
-            !soloFiveStar ||
-            !singleSupplementaryFourStar ||
-            !singleSupplementaryFiveStar ||
-            !standardFourStar ||
-            !standardFiveStar) {
+        const { adventureType, adventureId, solo, soloFourStar, soloFiveStar, singleSupplementary, singleSupplementaryFourStar, singleSupplementaryFiveStar, standardFourStar, standardFiveStar, } = req.body;
+        if (!adventureType || !adventureId) {
             res.status(StatusCodes.BAD_REQUEST).json({
                 message: "Please fill all the fields",
             });
@@ -23,8 +15,8 @@ const addBookingPrice = async (req, res) => {
             tourId: adventureType === "Tour" ? adventureId : null,
             wellnessId: adventureType === "Wellness" ? adventureId : null,
             activityId: adventureType === "Activity" ? adventureId : null,
-            pricePerPerson,
-            discount,
+            solo,
+            singleSupplementary,
             soloFourStar,
             soloFiveStar,
             singleSupplementaryFourStar,
@@ -49,16 +41,8 @@ const addBookingPrice = async (req, res) => {
 };
 const updateBookingPrice = async (req, res) => {
     try {
-        const { adventureType, adventureId, pricePerPerson, discount, soloFourStar, soloFiveStar, singleSupplementaryFourStar, singleSupplementaryFiveStar, standardFourStar, standardFiveStar, } = req.body;
-        if (!adventureType ||
-            !adventureId ||
-            !pricePerPerson ||
-            !soloFourStar ||
-            !soloFiveStar ||
-            !singleSupplementaryFourStar ||
-            !singleSupplementaryFiveStar ||
-            !standardFourStar ||
-            !standardFiveStar) {
+        const { adventureType, adventureId, solo, soloFourStar, soloFiveStar, singleSupplementary, singleSupplementaryFourStar, singleSupplementaryFiveStar, standardFourStar, standardFiveStar, } = req.body;
+        if (!adventureType || !adventureId) {
             res.status(StatusCodes.BAD_REQUEST).json({
                 message: "Please fill all the fields",
             });
@@ -80,8 +64,8 @@ const updateBookingPrice = async (req, res) => {
             query.activityId = adventureId;
         }
         const bookingPrice = await BookingPrice.findOneAndUpdate(query, {
-            pricePerPerson,
-            discount,
+            solo,
+            singleSupplementary,
             soloFourStar,
             soloFiveStar,
             singleSupplementaryFourStar,

@@ -21,11 +21,7 @@ const bookingPriceSchema = new mongoose.Schema({
         ref: "Activity",
         default: null,
     },
-    pricePerPerson: {
-        type: Number,
-        required: true,
-    },
-    discount: {
+    singleSupplementary: {
         type: Number,
         default: 0,
     },
@@ -37,21 +33,25 @@ const bookingPriceSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    solo: {
+        type: Number,
+        default: 0,
+    },
     soloFourStar: {
         type: Number,
-        required: true,
+        default: 0,
     },
     soloFiveStar: {
         type: Number,
-        required: true,
+        default: 0,
     },
     standardFourStar: {
         type: Number,
-        required: true,
+        default: 0,
     },
     standardFiveStar: {
         type: Number,
-        required: true,
+        default: 0,
     },
 }, {
     timestamps: true,
