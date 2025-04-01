@@ -149,6 +149,49 @@ const editTrek = async (req: EditTrekRequest, res: Response): Promise<void> => {
     if (updateData.discount !== undefined) {
       updateFields.discount = Number(updateData.discount)
     }
+    if (updateData.minDays) {
+      updateFields["days.min"] = Number(updateData.minDays)
+    }
+    if (updateData.maxDays) {
+      updateFields["days.max"] = Number(updateData.maxDays)
+    }
+    if (updateData.groupSizeMin) {
+      updateFields["groupSize.min"] = Number(updateData.groupSizeMin)
+    }
+    if (updateData.groupSizeMax) {
+      updateFields["groupSize.max"] = Number(updateData.groupSizeMax)
+    }
+    if (updateData.price) {
+      updateFields.price = Number(updateData.price)
+    }
+    if (updateData.location) {
+      updateFields.location = JSON.parse(updateData.location)
+    }
+    if (updateData.overview) {
+      updateFields.overview = JSON.parse(updateData.overview)
+    }
+    if (updateData.note) {
+      updateFields.note = JSON.parse(updateData.note)
+    }
+    if (updateData.faq) {
+      updateFields.faq = JSON.parse(updateData.faq)
+    }
+    if (updateData.meal) {
+      updateFields.meal = JSON.parse(updateData.meal)
+    }
+    if (updateData.difficulty) {
+      updateFields.difficulty = JSON.parse(updateData.difficulty)
+    }
+    if (updateData.startingPoint) {
+      updateFields.startingPoint = JSON.parse(updateData.startingPoint)
+    }
+    if (updateData.endingPoint) {
+      updateFields.endingPoint = JSON.parse(updateData.endingPoint)
+    }
+    if (updateData.country) {
+      updateFields.country = JSON.parse(updateData.country)
+    }
+
     if (updateData.bestSeason) {
       updateFields.bestSeason = JSON.parse(updateData.bestSeason)
     }
