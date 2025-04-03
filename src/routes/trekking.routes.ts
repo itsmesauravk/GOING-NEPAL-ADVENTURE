@@ -11,8 +11,6 @@ import {
 } from "../controllers/trekkings/index.js"
 import uploader from "../utils/multer.js"
 
-import auth from "../middlewares/auth.js"
-
 // Add these type definitions
 interface MulterRequest extends express.Request {
   files: {
