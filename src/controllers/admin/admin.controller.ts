@@ -231,6 +231,7 @@ const loginAdmin = async (req: Request, res: Response): Promise<void> => {
 const adminProfile = async (req: Request, res: Response) => {
   try {
     const id = req.query.id as string
+    console.log(id)
 
     if (!id) {
       return res.status(StatusCodes.BAD_REQUEST).json({

@@ -8,6 +8,7 @@ import slug from "slug"
 interface MulterRequest extends Request {
   files: {
     thumbnail?: Express.Multer.File[]
+    routemapimage?: Express.Multer.File[]
     images?: Express.Multer.File[]
     video?: Express.Multer.File[]
     trekPdf?: Express.Multer.File[]
@@ -51,6 +52,7 @@ const addTrek = async (
     const thumbnail = req.files?.thumbnail
     const images = req.files?.images
     const trekPdf = req.files?.trekPdf
+    const routemapimage = req.files?.routemapimage
 
     // Validate required fields
     // console.log(req.body)
@@ -127,6 +129,23 @@ const addTrek = async (
       uploadedThumbnail = uploadedThumbnail.secure_url
     }
 
+    // Upload route map image
+    let uploadedRouteMapImage
+    if (routemapimage) {
+      uploadedRouteMapImage = await uploadFile(
+        routemapimage[0].path,
+        "trekking/routemapimage"
+      )
+
+      if (!uploadedRouteMapImage) {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+          success: false,
+          message: "Error uploading route map image",
+        })
+      }
+      uploadedRouteMapImage = uploadedRouteMapImage.secure_url
+    }
+
     // Upload images
     const uploadedImages: string[] = []
     if (images && images.length > 0) {
@@ -168,6 +187,7 @@ const addTrek = async (
       bestSeason: JSON.parse(bestSeason),
       overview,
       thumbnail: uploadedThumbnail,
+      routeMapImage: uploadedRouteMapImage,
       trekHighlights: JSON.parse(trekHighlights) || [],
       itinerary: JSON.parse(itinerary) || [],
       servicesCostIncludes: JSON.parse(servicesCostIncludes) || [],

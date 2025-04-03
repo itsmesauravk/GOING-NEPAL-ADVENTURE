@@ -26,6 +26,7 @@ const router = express.Router()
 
 const uploadFields = [
   { name: "thumbnail", maxCount: 1 },
+  { name: "routemapimage", maxCount: 1 },
   { name: "images", maxCount: 10 },
   { name: "video", maxCount: 1 },
   { name: "trekPdf", maxCount: 1 },
