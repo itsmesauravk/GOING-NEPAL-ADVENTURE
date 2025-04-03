@@ -6,6 +6,6 @@ const router = express.Router()
 
 // routes
 router.get("/get-count-details", getCountDetails)
-router.get("/search", globalSearch)
+router.get("/search-global", globalSearch)
 
 export default router
