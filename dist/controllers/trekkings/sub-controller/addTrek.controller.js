@@ -10,6 +10,7 @@ const addTrek = async (req, res) => {
         const thumbnail = req.files?.thumbnail;
         const images = req.files?.images;
         const trekPdf = req.files?.trekPdf;
+        const routemapimage = req.files?.routemapimage;
         // Validate required fields
         // console.log(req.body)
         if (!name ||
@@ -74,6 +75,18 @@ const addTrek = async (req, res) => {
             }
             uploadedThumbnail = uploadedThumbnail.secure_url;
         }
+        // Upload route map image
+        let uploadedRouteMapImage;
+        if (routemapimage) {
+            uploadedRouteMapImage = await uploadFile(routemapimage[0].path, "trekking/routemapimage");
+            if (!uploadedRouteMapImage) {
+                return res.status(StatusCodes.BAD_REQUEST).json({
+                    success: false,
+                    message: "Error uploading route map image",
+                });
+            }
+            uploadedRouteMapImage = uploadedRouteMapImage.secure_url;
+        }
         // Upload images
         const uploadedImages = [];
         if (images && images.length > 0) {
@@ -112,6 +125,7 @@ const addTrek = async (req, res) => {
             bestSeason: JSON.parse(bestSeason),
             overview,
             thumbnail: uploadedThumbnail,
+            routeMapImage: uploadedRouteMapImage,
             trekHighlights: JSON.parse(trekHighlights) || [],
             itinerary: JSON.parse(itinerary) || [],
             servicesCostIncludes: JSON.parse(servicesCostIncludes) || [],

@@ -2,7 +2,7 @@ import { BookingPrice } from "../../../models/bookingPrice.model.js";
 import { StatusCodes } from "http-status-codes";
 const addBookingPrice = async (req, res) => {
     try {
-        const { adventureType, adventureId, solo, soloFourStar, soloFiveStar, singleSupplementary, singleSupplementaryFourStar, singleSupplementaryFiveStar, standardFourStar, standardFiveStar, } = req.body;
+        const { adventureType, adventureId, solo, soloThreeStar, soloFourStar, soloFiveStar, singleSupplementary, singleSupplementaryThreeStar, singleSupplementaryFourStar, singleSupplementaryFiveStar, standardThreeStar, standardFourStar, standardFiveStar, } = req.body;
         if (!adventureType || !adventureId) {
             res.status(StatusCodes.BAD_REQUEST).json({
                 message: "Please fill all the fields",
@@ -17,10 +17,13 @@ const addBookingPrice = async (req, res) => {
             activityId: adventureType === "Activity" ? adventureId : null,
             solo,
             singleSupplementary,
+            soloThreeStar,
             soloFourStar,
             soloFiveStar,
+            singleSupplementaryThreeStar,
             singleSupplementaryFourStar,
             singleSupplementaryFiveStar,
+            standardThreeStar,
             standardFourStar,
             standardFiveStar,
         });
@@ -41,7 +44,7 @@ const addBookingPrice = async (req, res) => {
 };
 const updateBookingPrice = async (req, res) => {
     try {
-        const { adventureType, adventureId, solo, soloFourStar, soloFiveStar, singleSupplementary, singleSupplementaryFourStar, singleSupplementaryFiveStar, standardFourStar, standardFiveStar, } = req.body;
+        const { adventureType, adventureId, solo, soloThreeStar, soloFourStar, soloFiveStar, singleSupplementary, singleSupplementaryThreeStar, singleSupplementaryFourStar, singleSupplementaryFiveStar, standardThreeStar, standardFourStar, standardFiveStar, } = req.body;
         if (!adventureType || !adventureId) {
             res.status(StatusCodes.BAD_REQUEST).json({
                 message: "Please fill all the fields",
@@ -66,10 +69,13 @@ const updateBookingPrice = async (req, res) => {
         const bookingPrice = await BookingPrice.findOneAndUpdate(query, {
             solo,
             singleSupplementary,
+            soloThreeStar,
             soloFourStar,
             soloFiveStar,
+            singleSupplementaryThreeStar,
             singleSupplementaryFourStar,
             singleSupplementaryFiveStar,
+            standardThreeStar,
             standardFourStar,
             standardFiveStar,
         }, { new: true });

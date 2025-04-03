@@ -15,10 +15,6 @@ const sendSingleMail = async (req, res) => {
         }
         updateRequest.status = "pending";
         await updateRequest.save();
-        const test = false;
-        if (!test) {
-            return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: "Test mode is disabled" });
-        }
         // Validate inputs
         if (!recipient || !subject || !message || !reqId) {
             return res

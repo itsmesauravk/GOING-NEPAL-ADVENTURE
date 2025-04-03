@@ -43,6 +43,14 @@ const editTrek = async (req, res) => {
             const uploadedThumbnail = await uploadFile(files.thumbnail[0].path, "trekking/thumbnail");
             updateFields.thumbnail = uploadedThumbnail?.secure_url;
         }
+        //for routemap image
+        if (files.routemapimage) {
+            if (existingTrek.routeMapImage) {
+                await deleteImage(existingTrek.routeMapImage);
+            }
+            const uploadedRoutemapImage = await uploadFile(files.routemapimage[0].path, "trekking/routemapimage");
+            updateFields.routeMapImage = uploadedRoutemapImage?.secure_url;
+        }
         // Handle video deletion/update
         if (videoToDelete && existingTrek.video) {
             await deleteImage(existingTrek.video);
@@ -75,6 +83,48 @@ const editTrek = async (req, res) => {
         }
         if (updateData.discount !== undefined) {
             updateFields.discount = Number(updateData.discount);
+        }
+        if (updateData.minDays) {
+            updateFields["days.min"] = Number(updateData.minDays);
+        }
+        if (updateData.maxDays) {
+            updateFields["days.max"] = Number(updateData.maxDays);
+        }
+        if (updateData.groupSizeMin) {
+            updateFields["groupSize.min"] = Number(updateData.groupSizeMin);
+        }
+        if (updateData.groupSizeMax) {
+            updateFields["groupSize.max"] = Number(updateData.groupSizeMax);
+        }
+        if (updateData.price) {
+            updateFields.price = Number(updateData.price);
+        }
+        if (updateData.location) {
+            updateFields.location = JSON.parse(updateData.location);
+        }
+        if (updateData.overview) {
+            updateFields.overview = JSON.parse(updateData.overview);
+        }
+        if (updateData.note) {
+            updateFields.note = JSON.parse(updateData.note);
+        }
+        if (updateData.faq) {
+            updateFields.faq = JSON.parse(updateData.faq);
+        }
+        if (updateData.meal) {
+            updateFields.meal = JSON.parse(updateData.meal);
+        }
+        if (updateData.difficulty) {
+            updateFields.difficulty = JSON.parse(updateData.difficulty);
+        }
+        if (updateData.startingPoint) {
+            updateFields.startingPoint = JSON.parse(updateData.startingPoint);
+        }
+        if (updateData.endingPoint) {
+            updateFields.endingPoint = JSON.parse(updateData.endingPoint);
+        }
+        if (updateData.country) {
+            updateFields.country = JSON.parse(updateData.country);
         }
         if (updateData.bestSeason) {
             updateFields.bestSeason = JSON.parse(updateData.bestSeason);

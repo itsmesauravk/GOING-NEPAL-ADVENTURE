@@ -12,6 +12,7 @@ import { UploadApiResponse } from "cloudinary"
 interface EditTrekRequest extends Request {
   files?: {
     thumbnail?: Express.Multer.File[]
+    routemapimage?: Express.Multer.File[]
     images?: Express.Multer.File[]
     video?: Express.Multer.File[]
     trekPdf?: Express.Multer.File[]
@@ -41,6 +42,7 @@ interface EditTrekRequest extends Request {
     packingList?: string
     faq?: string
     note?: string
+
     imagesToDelete?: string[] // Array of image URLs to delete
     thumbnailToDelete?: boolean // Flag to delete existing thumbnail
     videoToDelete?: boolean // Flag to delete existing video
@@ -103,6 +105,17 @@ const editTrek = async (req: EditTrekRequest, res: Response): Promise<void> => {
         "trekking/thumbnail"
       )
       updateFields.thumbnail = uploadedThumbnail?.secure_url
+    }
+    //for routemap image
+    if (files.routemapimage) {
+      if (existingTrek.routeMapImage) {
+        await deleteImage(existingTrek.routeMapImage)
+      }
+      const uploadedRoutemapImage = await uploadFile(
+        files.routemapimage[0].path,
+        "trekking/routemapimage"
+      )
+      updateFields.routeMapImage = uploadedRoutemapImage?.secure_url
     }
 
     // Handle video deletion/update

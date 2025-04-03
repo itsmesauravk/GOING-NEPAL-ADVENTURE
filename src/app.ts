@@ -49,6 +49,9 @@ import adminRouter from "./routes/admin.routes.js"
 //booking
 import { bookingRouter } from "./routes/booking.routes.js"
 
+//global search page
+import globalSearch from "./controllers/home/globalSearch.controller.js"
+
 //health
 app.use("/", Health)
 //trekking
@@ -83,5 +86,8 @@ app.get("/", (req, res) => {
     message: "GOING NEAPL ADVENTURE",
   })
 })
+
+//global search route
+app.get("/api/v1/search", globalSearch)
 
 export default app

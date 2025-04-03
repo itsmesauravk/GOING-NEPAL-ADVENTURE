@@ -176,11 +176,12 @@ const loginAdmin = async (req, res) => {
 };
 const adminProfile = async (req, res) => {
     try {
-        const token = req.header("Authorization")?.split(" ")[1] || req.cookies.accessToken;
-        if (!token) {
-            return res.status(StatusCodes.UNAUTHORIZED).json({
+        const id = req.query.id;
+        console.log(id);
+        if (!id) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
                 success: false,
-                message: "Unauthorized access. Token missing.",
+                message: "Admin Id is required",
             });
         }
         const { s } = req.query;
@@ -189,10 +190,9 @@ const adminProfile = async (req, res) => {
             selected = "-password";
         }
         else {
-            selected = "_id fullName email createdAt";
+            selected = "_id fullName email phoneNumber createdAt ";
         }
-        const decodedToken = jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET);
-        const admin = await Admin.findById(decodedToken.id).select(selected);
+        const admin = await Admin.findById(id).select(selected);
         if (!admin) {
             return res.status(StatusCodes.NOT_FOUND).json({
                 success: false,
@@ -358,28 +358,16 @@ const getFullAdminProfile = async (req, res) => {
 };
 const editAdmin = async (req, res) => {
     try {
-        // Extract token
-        const token = req.cookies?.token || req.header("Authorization")?.split(" ")[1];
-        if (!token) {
-            res.status(StatusCodes.UNAUTHORIZED).json({
-                success: false,
-                message: "Authentication token is missing",
-            });
-            return;
-        }
-        // Verify token
-        const decoded = jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET);
-        // Validate request body
-        const { fullName, phoneNumber } = req.body;
-        if (!fullName || !phoneNumber) {
+        const { id, fullName, phoneNumber } = req.body;
+        if (!id) {
             res.status(StatusCodes.BAD_REQUEST).json({
                 success: false,
-                message: "Please provide all required fields",
+                message: "Admin ID is required",
             });
             return;
         }
         // Check if admin exists
-        const existingAdmin = await Admin.findById(decoded.id);
+        const existingAdmin = await Admin.findById(id);
         if (!existingAdmin) {
             res.status(StatusCodes.NOT_FOUND).json({
                 success: false,
@@ -388,7 +376,7 @@ const editAdmin = async (req, res) => {
             return;
         }
         // Update fields
-        const updatedAdmin = await Admin.findByIdAndUpdate(decoded.id, {
+        const updatedAdmin = await Admin.findByIdAndUpdate(id, {
             $set: { fullName: fullName, phoneNumber: phoneNumber },
         }, { new: true });
         if (!updatedAdmin) {

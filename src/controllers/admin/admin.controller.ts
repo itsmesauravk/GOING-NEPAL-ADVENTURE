@@ -228,16 +228,17 @@ const loginAdmin = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
-const adminProfile = async (req: Request, res: Response) => {
+const adminProfile = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = req.query.id as string
     console.log(id)
 
     if (!id) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
+      res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
         message: "Admin Id is required",
       })
+      return
     }
 
     const { s } = req.query
@@ -252,10 +253,11 @@ const adminProfile = async (req: Request, res: Response) => {
     const admin = await Admin.findById(id).select(selected)
 
     if (!admin) {
-      return res.status(StatusCodes.NOT_FOUND).json({
+      res.status(StatusCodes.NOT_FOUND).json({
         success: false,
         message: "Admin not found",
       })
+      return
     }
 
     res.status(StatusCodes.OK).json({

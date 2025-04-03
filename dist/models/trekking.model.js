@@ -55,6 +55,7 @@ const trekkingSchema = new mongoose.Schema({
     price: { type: Number, required: true },
     discount: { type: Number, default: 0 },
     thumbnail: { type: String },
+    routeMapImage: { type: String },
     country: {
         type: String,
         required: true,
