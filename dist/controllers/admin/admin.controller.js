@@ -179,10 +179,11 @@ const adminProfile = async (req, res) => {
         const id = req.query.id;
         console.log(id);
         if (!id) {
-            return res.status(StatusCodes.BAD_REQUEST).json({
+            res.status(StatusCodes.BAD_REQUEST).json({
                 success: false,
                 message: "Admin Id is required",
             });
+            return;
         }
         const { s } = req.query;
         let selected;
@@ -194,10 +195,11 @@ const adminProfile = async (req, res) => {
         }
         const admin = await Admin.findById(id).select(selected);
         if (!admin) {
-            return res.status(StatusCodes.NOT_FOUND).json({
+            res.status(StatusCodes.NOT_FOUND).json({
                 success: false,
                 message: "Admin not found",
             });
+            return;
         }
         res.status(StatusCodes.OK).json({
             success: true,

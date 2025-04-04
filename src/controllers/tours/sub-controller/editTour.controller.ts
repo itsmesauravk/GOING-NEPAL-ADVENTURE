@@ -173,6 +173,77 @@ const editTour = async (
       }
     }
 
+    if (updateData.price) {
+      updateFields.price = Number(updateData.price)
+    }
+    if (updateData.discount) {
+      updateFields.discount = Number(updateData.discount)
+    }
+    if (updateData.country) {
+      updateFields.country = updateData.country
+    }
+    if (updateData.tourLanguage) {
+      updateFields.tourLanguage = updateData.tourLanguage
+    }
+    if (updateData.maxAltitude) {
+      updateFields.maxAltitude = updateData.maxAltitude
+    }
+    if (updateData.suitableAge) {
+      updateFields.suitableAge = updateData.suitableAge
+    }
+    if (updateData.arrivalLocation) {
+      updateFields.arrivalLocation = updateData.arrivalLocation
+    }
+    if (updateData.departureLocation) {
+      updateFields.departureLocation = updateData.departureLocation
+    }
+    if (updateData.location) {
+      updateFields.location = JSON.parse(updateData.location)
+    }
+    if (updateData.startingPoint) {
+      updateFields.startingPoint = JSON.parse(updateData.startingPoint)
+    }
+    if (updateData.endingPoint) {
+      updateFields.endingPoint = JSON.parse(updateData.endingPoint)
+    }
+    if (updateData.accommodation) {
+      updateFields.accommodation = JSON.parse(updateData.accommodation)
+    }
+    if (updateData.thingsToKnow) {
+      updateFields.thingsToKnow = JSON.parse(updateData.thingsToKnow)
+    }
+    if (updateData.bestSeason) {
+      updateFields.bestSeason = JSON.parse(updateData.bestSeason)
+    }
+    if (updateData.overview) {
+      updateFields.overview = JSON.parse(updateData.overview)
+    }
+    if (updateData.note) {
+      updateFields.note = JSON.parse(updateData.note)
+    }
+    if (updateData.faq) {
+      updateFields.faq = JSON.parse(updateData.faq)
+    }
+    if (updateData.meal) {
+      updateFields.meal = JSON.parse(updateData.meal)
+    }
+    if (updateData.itinerary) {
+      updateFields.itinerary = JSON.parse(updateData.itinerary)
+    }
+    if (updateData.highlights) {
+      updateFields.highlights = JSON.parse(updateData.highlights)
+    }
+    if (updateData.servicesCostIncludes) {
+      updateFields.servicesCostIncludes = JSON.parse(
+        updateData.servicesCostIncludes
+      )
+    }
+    if (updateData.servicesCostExcludes) {
+      updateFields.servicesCostExcludes = JSON.parse(
+        updateData.servicesCostExcludes
+      )
+    }
+
     // Handle trip type update
     if (tripType) {
       const parsedTripType = JSON.parse(tripType)
