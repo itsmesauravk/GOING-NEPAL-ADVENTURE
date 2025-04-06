@@ -42,6 +42,8 @@ interface EditTourRequest extends Request {
     overview?: string
     highlights?: string
     itinerary?: string
+    inclusives?: string
+    exclusives?: string
     servicesCostIncludes?: string
     servicesCostExcludes?: string
     faq?: string
@@ -233,15 +235,11 @@ const editTour = async (
     if (updateData.highlights) {
       updateFields.highlights = JSON.parse(updateData.highlights)
     }
-    if (updateData.servicesCostIncludes) {
-      updateFields.servicesCostIncludes = JSON.parse(
-        updateData.servicesCostIncludes
-      )
+    if (updateData.inclusives) {
+      updateFields.servicesCostIncludes = JSON.parse(updateData.inclusives)
     }
-    if (updateData.servicesCostExcludes) {
-      updateFields.servicesCostExcludes = JSON.parse(
-        updateData.servicesCostExcludes
-      )
+    if (updateData.exclusives) {
+      updateFields.servicesCostExcludes = JSON.parse(updateData.exclusives)
     }
 
     // Handle trip type update
