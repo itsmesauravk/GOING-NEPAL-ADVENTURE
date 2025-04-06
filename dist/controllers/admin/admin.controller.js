@@ -153,7 +153,7 @@ const loginAdmin = async (req, res) => {
         admin.failedLoginAttempts = 0;
         admin.lastLoginAt = new Date();
         admin.lastLoginIP = req.ip || "unknown";
-        admin.loginHistory.push({ ip: admin.lastLoginIP, timestamp: new Date() });
+        // admin.loginHistory.push({ ip: admin.lastLoginIP, timestamp: new Date() })
         await admin.save();
         const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(admin);
         res.status(StatusCodes.OK).json({
@@ -177,7 +177,6 @@ const loginAdmin = async (req, res) => {
 const adminProfile = async (req, res) => {
     try {
         const id = req.query.id;
-        console.log(id);
         if (!id) {
             res.status(StatusCodes.BAD_REQUEST).json({
                 success: false,
@@ -191,7 +190,8 @@ const adminProfile = async (req, res) => {
             selected = "-password";
         }
         else {
-            selected = "_id fullName email phoneNumber createdAt ";
+            selected =
+                "_id fullName email phoneNumber createdAt location contactNumbers contactEmails facebookLink twitterLink instagramLink linkedInLink officeTimeStart officeTimeEnd otherWebsites";
         }
         const admin = await Admin.findById(id).select(selected);
         if (!admin) {
@@ -360,7 +360,7 @@ const getFullAdminProfile = async (req, res) => {
 };
 const editAdmin = async (req, res) => {
     try {
-        const { id, fullName, phoneNumber } = req.body;
+        const { id, fullName, phoneNumber, location, contactNumbers, contactEmails, facebookLink, twitterLink, instagramLink, linkedInLink, officeTimeStart, officeTimeEnd, otherWebsites, oldPassword, newPassword, } = req.body;
         if (!id) {
             res.status(StatusCodes.BAD_REQUEST).json({
                 success: false,
@@ -377,9 +377,37 @@ const editAdmin = async (req, res) => {
             });
             return;
         }
+        let newHashedPassword = "";
+        if (oldPassword && newPassword) {
+            // Validate old password
+            const validatePassword = await bcrypt.compare(oldPassword, existingAdmin.password);
+            if (!validatePassword) {
+                res.status(StatusCodes.UNAUTHORIZED).json({
+                    success: false,
+                    message: "Invalid old password",
+                });
+                return;
+            }
+            // Update password
+            newHashedPassword = await bcrypt.hash(newPassword, 10);
+        }
         // Update fields
         const updatedAdmin = await Admin.findByIdAndUpdate(id, {
-            $set: { fullName: fullName, phoneNumber: phoneNumber },
+            $set: {
+                fullName: fullName,
+                phoneNumber: phoneNumber,
+                password: newHashedPassword || existingAdmin.password,
+                location,
+                contactNumbers,
+                contactEmails,
+                facebookLink,
+                twitterLink,
+                instagramLink,
+                linkedInLink,
+                officeTimeStart,
+                officeTimeEnd,
+                otherWebsites,
+            },
         }, { new: true });
         if (!updatedAdmin) {
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -391,7 +419,7 @@ const editAdmin = async (req, res) => {
         res.status(StatusCodes.OK).json({
             success: true,
             message: "Admin updated successfully",
-            data: updatedAdmin,
+            data: [],
         });
     }
     catch (error) {

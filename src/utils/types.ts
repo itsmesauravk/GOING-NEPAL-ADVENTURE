@@ -40,6 +40,7 @@ export interface RequestQueryObjectType {
 }
 
 import { Document } from "mongoose"
+import { off } from "process"
 
 export interface AdminTypes {
   fullName: string
@@ -50,6 +51,16 @@ export interface AdminTypes {
   isActive: boolean
   isSuspended: boolean
   role: "Admin" | "Moderator"
+  location?: string | null
+  contactNumbers: string[]
+  contactEmails: string[]
+  facebookLink?: string | null
+  twitterLink?: string | null
+  instagramLink?: string | null
+  linkedInLink?: string | null
+  otherWebsites?: string[] | null
+  officeTimeStart?: string | null
+  officeTimeEnd?: string | null
   twoFactorEnabled: boolean
   createdAt: Date
   updatedAt: Date

@@ -39,6 +39,46 @@ const adminSchema = new mongoose.Schema({
         enum: ["Admin", "Moderator"],
         default: "Admin",
     },
+    location: {
+        type: String,
+        default: null,
+    },
+    contactNumbers: {
+        type: [String],
+        default: [],
+    },
+    contactEmails: {
+        type: [String],
+        default: [],
+    },
+    facebookLink: {
+        type: String,
+        default: null,
+    },
+    twitterLink: {
+        type: String,
+        default: null,
+    },
+    instagramLink: {
+        type: String,
+        default: null,
+    },
+    linkedInLink: {
+        type: String,
+        default: null,
+    },
+    officeTimeStart: {
+        type: String,
+        default: null,
+    },
+    officeTimeEnd: {
+        type: String,
+        default: null,
+    },
+    otherWebsites: {
+        type: [String],
+        default: [],
+    },
     twoFactorEnabled: {
         type: Boolean,
         default: false,
@@ -59,12 +99,12 @@ const adminSchema = new mongoose.Schema({
         type: String,
         default: null,
     },
-    loginHistory: [
-        {
-            ip: String,
-            timestamp: Date,
-        },
-    ],
+    // loginHistory: [
+    //   {
+    //     ip: String,
+    //     timestamp: Date,
+    //   },
+    // ],
     failedLoginAttempts: {
         type: Number,
         default: 0,
