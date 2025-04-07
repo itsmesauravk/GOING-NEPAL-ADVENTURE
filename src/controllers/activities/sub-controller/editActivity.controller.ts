@@ -2,7 +2,11 @@ import Activity from "../../../models/activities.model.js"
 import { Request, Response } from "express"
 import { StatusCodes } from "http-status-codes"
 import slug from "slug"
-import { uploadFile, uploadVideo } from "../../../utils/cloudinary.js"
+import {
+  deleteImage,
+  uploadFile,
+  uploadVideo,
+} from "../../../utils/cloudinary.js"
 
 // Define TypeScript interface for Multer request
 interface MulterRequest extends Request {
@@ -27,6 +31,7 @@ const editActivity = async (req: MulterRequest, res: Response) => {
       overview,
       serviceIncludes,
       thingsToKnow,
+      imageToDelete,
       FAQs,
     } = req.body
 
@@ -41,6 +46,27 @@ const editActivity = async (req: MulterRequest, res: Response) => {
 
     // Prepare update object
     const updateData: any = {}
+
+    //handle images delete
+    if (imageToDelete && imageToDelete?.length > 0) {
+      const deleteItems = JSON.parse(imageToDelete)
+      if (deleteItems.length > 0) {
+        const remainingImages = activity.gallery.filter(
+          (img: string) => !deleteItems.includes(img)
+        )
+        // Delete images from Cloudinary
+        await Promise.all(
+          deleteItems.map(async (imageUrl: string) => {
+            try {
+              await deleteImage(imageUrl)
+            } catch (error) {
+              console.error(`Failed to delete image: ${imageUrl}`, error)
+            }
+          })
+        )
+        updateData.gallery = remainingImages
+      }
+    }
 
     // Update basic fields if provided
     if (title) {

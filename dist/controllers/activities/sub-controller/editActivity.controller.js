@@ -1,10 +1,10 @@
 import Activity from "../../../models/activities.model.js";
 import { StatusCodes } from "http-status-codes";
 import slug from "slug";
-import { uploadFile, uploadVideo } from "../../../utils/cloudinary.js";
+import { deleteImage, uploadFile, uploadVideo, } from "../../../utils/cloudinary.js";
 const editActivity = async (req, res) => {
     try {
-        const { id, title, price, country, location, groupSizeMin, groupSizeMax, bestSeason, overview, serviceIncludes, thingsToKnow, FAQs, } = req.body;
+        const { id, title, price, country, location, groupSizeMin, groupSizeMax, bestSeason, overview, serviceIncludes, thingsToKnow, imageToDelete, FAQs, } = req.body;
         // Find existing activity
         const activity = await Activity.findById(id);
         if (!activity) {
@@ -15,6 +15,23 @@ const editActivity = async (req, res) => {
         }
         // Prepare update object
         const updateData = {};
+        //handle images delete
+        if (imageToDelete && imageToDelete?.length > 0) {
+            const deleteItems = JSON.parse(imageToDelete);
+            if (deleteItems.length > 0) {
+                const remainingImages = activity.gallery.filter((img) => !deleteItems.includes(img));
+                // Delete images from Cloudinary
+                await Promise.all(deleteItems.map(async (imageUrl) => {
+                    try {
+                        await deleteImage(imageUrl);
+                    }
+                    catch (error) {
+                        console.error(`Failed to delete image: ${imageUrl}`, error);
+                    }
+                }));
+                updateData.gallery = remainingImages;
+            }
+        }
         // Update basic fields if provided
         if (title) {
             updateData.title = title;

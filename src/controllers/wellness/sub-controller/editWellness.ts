@@ -23,20 +23,22 @@ interface EditWellnessRequest extends Request {
     minDays?: number
     maxDays?: number
     location?: string
-    tourLanguage?: string
+    language?: string
     suitableAge?: string
     maxAltitude?: string
     groupSizeMin?: number
     groupSizeMax?: number
     startingPoint?: string
     endingPoint?: string
+    arrivalLocation?: string
+    departureLocation?: string
     clothesType?: string
     accommodation?: string
     thingsToKnow?: string
     meal?: string
     bestSeason?: string
     overview?: string
-    trekHighlights?: string // Changed from wellnessHighlights to match frontend
+    highlights?: string // Changed from wellnessHighlights to match frontend
     itinerary?: string
     servicesCostIncludes?: string
     servicesCostExcludes?: string
@@ -169,11 +171,13 @@ const editWellness = async (
       "price",
       "country",
       "location",
-      "tourLanguage",
+      "language",
       "suitableAge",
       "maxAltitude",
       "startingPoint",
       "endingPoint",
+      "arrivalLocation",
+      "departureLocation",
       "clothesType",
       "meal",
       "overview",
@@ -191,7 +195,7 @@ const editWellness = async (
       "accommodation",
       "thingsToKnow",
       "bestSeason",
-      "trekHighlights",
+      "highlights",
       "itinerary",
       "servicesCostIncludes",
       "servicesCostExcludes",

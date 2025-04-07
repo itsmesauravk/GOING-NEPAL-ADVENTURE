@@ -4,7 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import slug from "slug";
 const editTrek = async (req, res) => {
     try {
-        const { trekId, imagesToDelete = [], thumbnailToDelete, videoToDelete, ...updateData } = req.body;
+        const { trekId, imagesToDelete, thumbnailToDelete, videoToDelete, ...updateData } = req.body;
         const files = req.files || {};
         // Find existing trek
         const existingTrek = await Trekking.findById(trekId);
@@ -17,19 +17,22 @@ const editTrek = async (req, res) => {
         }
         // Handle file deletions first
         const updateFields = { ...updateData };
-        // Delete specified images
-        if (imagesToDelete.length > 0) {
-            const remainingImages = existingTrek.images.filter((img) => !imagesToDelete.includes(img));
-            // Delete images from Cloudinary
-            await Promise.all(imagesToDelete.map(async (imageUrl) => {
-                try {
-                    await deleteImage(imageUrl);
-                }
-                catch (error) {
-                    console.error(`Failed to delete image: ${imageUrl}`, error);
-                }
-            }));
-            updateFields.images = remainingImages;
+        //handle images delete
+        if (imagesToDelete && imagesToDelete?.length > 0) {
+            const deleteItems = JSON.parse(imagesToDelete);
+            if (deleteItems.length > 0) {
+                const remainingImages = existingTrek.images.filter((img) => !deleteItems.includes(img));
+                // Delete images from Cloudinary
+                await Promise.all(deleteItems.map(async (imageUrl) => {
+                    try {
+                        await deleteImage(imageUrl);
+                    }
+                    catch (error) {
+                        console.error(`Failed to delete image: ${imageUrl}`, error);
+                    }
+                }));
+                updateFields.images = remainingImages;
+            }
         }
         // Handle thumbnail deletion/update
         if (thumbnailToDelete && existingTrek.thumbnail) {
@@ -100,31 +103,31 @@ const editTrek = async (req, res) => {
             updateFields.price = Number(updateData.price);
         }
         if (updateData.location) {
-            updateFields.location = JSON.parse(updateData.location);
+            updateFields.location = updateData.location;
         }
         if (updateData.overview) {
-            updateFields.overview = JSON.parse(updateData.overview);
+            updateFields.overview = updateData.overview;
         }
         if (updateData.note) {
-            updateFields.note = JSON.parse(updateData.note);
+            updateFields.note = updateData.note;
         }
         if (updateData.faq) {
             updateFields.faq = JSON.parse(updateData.faq);
         }
         if (updateData.meal) {
-            updateFields.meal = JSON.parse(updateData.meal);
+            updateFields.meal = updateData.meal;
         }
         if (updateData.difficulty) {
-            updateFields.difficulty = JSON.parse(updateData.difficulty);
+            updateFields.difficulty = updateData.difficulty;
         }
         if (updateData.startingPoint) {
-            updateFields.startingPoint = JSON.parse(updateData.startingPoint);
+            updateFields.startingPoint = updateData.startingPoint;
         }
         if (updateData.endingPoint) {
-            updateFields.endingPoint = JSON.parse(updateData.endingPoint);
+            updateFields.endingPoint = updateData.endingPoint;
         }
         if (updateData.country) {
-            updateFields.country = JSON.parse(updateData.country);
+            updateFields.country = updateData.country;
         }
         if (updateData.bestSeason) {
             updateFields.bestSeason = JSON.parse(updateData.bestSeason);

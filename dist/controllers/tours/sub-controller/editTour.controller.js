@@ -114,13 +114,16 @@ const editTour = async (req, res) => {
             updateFields.departureLocation = updateData.departureLocation;
         }
         if (updateData.location) {
-            updateFields.location = JSON.parse(updateData.location);
+            updateFields.location = updateData.location;
+        }
+        if (updateData.tourLanguage) {
+            updateFields.language = updateData.tourLanguage;
         }
         if (updateData.startingPoint) {
-            updateFields.startingPoint = JSON.parse(updateData.startingPoint);
+            updateFields.startingPoint = updateData.startingPoint;
         }
         if (updateData.endingPoint) {
-            updateFields.endingPoint = JSON.parse(updateData.endingPoint);
+            updateFields.endingPoint = updateData.endingPoint;
         }
         if (updateData.accommodation) {
             updateFields.accommodation = JSON.parse(updateData.accommodation);
@@ -132,16 +135,16 @@ const editTour = async (req, res) => {
             updateFields.bestSeason = JSON.parse(updateData.bestSeason);
         }
         if (updateData.overview) {
-            updateFields.overview = JSON.parse(updateData.overview);
+            updateFields.overview = updateData.overview;
         }
         if (updateData.note) {
-            updateFields.note = JSON.parse(updateData.note);
+            updateFields.note = updateData.note;
         }
         if (updateData.faq) {
             updateFields.faq = JSON.parse(updateData.faq);
         }
         if (updateData.meal) {
-            updateFields.meal = JSON.parse(updateData.meal);
+            updateFields.meal = updateData.meal;
         }
         if (updateData.itinerary) {
             updateFields.itinerary = JSON.parse(updateData.itinerary);
